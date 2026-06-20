@@ -1,0 +1,309 @@
+:root {
+  /* Warm ivory gallery palette */
+  --bg: #f4f1ea;
+  --surface: #faf8f3;
+  --ink: #1c1a17;
+  --ink-soft: #4a463f;
+  --muted: #8a8377;
+  --line: #d8d2c4;
+  --line-soft: #e6e1d5;
+  --gold: #9a7b4f;       /* antique brass accent, used sparingly */
+  --gold-soft: #b79b71;
+  --maxw: 660px;
+  --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --sans: "Jost", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #14130f;
+    --surface: #1b1915;
+    --ink: #efe9dc;
+    --ink-soft: #c7bfae;
+    --muted: #8f887a;
+    --line: #322e26;
+    --line-soft: #2a2620;
+    --gold: #c2a06a;
+    --gold-soft: #d8bc8a;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.65;
+}
+
+.wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 88px 28px 96px;
+}
+
+/* shared hairline rule */
+.rule {
+  width: 56px;
+  height: 1px;
+  background: var(--gold);
+  margin: 26px auto;
+  opacity: .8;
+}
+
+.section-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 22px;
+}
+
+/* ===== Hero ===== */
+.hero { text-align: center; margin-bottom: 76px; }
+.monogram {
+  width: 72px; height: 72px; margin: 0 auto 28px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: var(--serif);
+  font-size: 26px; font-weight: 500; letter-spacing: 2px;
+  color: var(--gold);
+}
+.eyebrow {
+  font-size: 10.5px; letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 14px;
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(40px, 9vw, 60px);
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  margin: 0;
+}
+.tagline {
+  font-family: var(--serif);
+  font-size: 19px; font-style: italic; font-weight: 400;
+  color: var(--ink-soft); margin: 0; letter-spacing: .2px;
+}
+.tagline code {
+  font-family: var(--sans); font-style: normal; font-size: 12px;
+  background: var(--surface); border: 1px solid var(--line-soft);
+  padding: 1px 7px; border-radius: 3px;
+}
+
+/* ===== Index / Links ===== */
+.links { margin: 0 0 80px; text-align: center; }
+.link {
+  display: flex; align-items: baseline; justify-content: space-between;
+  padding: 19px 4px;
+  border-top: 1px solid var(--line-soft);
+  color: var(--ink); text-decoration: none;
+  transition: padding-left .35s ease, color .35s ease;
+}
+.links .link:last-of-type { border-bottom: 1px solid var(--line-soft); }
+.link:hover { padding-left: 14px; color: var(--gold); }
+.link-label {
+  font-family: var(--serif); font-size: 22px; font-weight: 500;
+  letter-spacing: .2px;
+}
+.link-meta {
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted);
+}
+.link:hover .link-meta { color: var(--gold-soft); }
+
+/* ===== Collection ===== */
+.catalog-head { margin-bottom: 30px; }
+.catalog-head .section-label { margin-bottom: 18px; }
+.filters { display: flex; gap: 26px; justify-content: center; }
+.filter {
+  border: 0; background: none; cursor: pointer;
+  font-family: var(--sans);
+  font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted); padding: 4px 0; position: relative;
+  transition: color .3s ease;
+}
+.filter:hover { color: var(--ink); }
+.filter.is-active { color: var(--gold); }
+.filter.is-active::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: -4px;
+  height: 1px; background: var(--gold);
+}
+
+.items { display: grid; gap: 40px 30px; grid-template-columns: 1fr; }
+@media (min-width: 540px) { .items { grid-template-columns: 1fr 1fr; } }
+
+.card { display: flex; flex-direction: column; }
+.card-media {
+  aspect-ratio: 4 / 5;
+  background: var(--surface);
+  border: 1px solid var(--line-soft);
+  display: grid; place-items: center;
+  color: var(--muted); font-size: 10.5px;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  background-size: cover; background-position: center;
+  transition: opacity .4s ease;
+}
+.card:hover .card-media { opacity: .9; }
+.card-body { padding: 18px 2px 0; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.card-title {
+  font-family: var(--serif); font-weight: 500; font-size: 22px;
+  margin: 0; letter-spacing: .2px; line-height: 1.2;
+}
+.card-desc {
+  margin: 0; color: var(--ink-soft); font-size: 14px; font-weight: 300;
+  flex: 1; line-height: 1.6;
+}
+.card-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 12px; padding-top: 14px; border-top: 1px solid var(--line-soft);
+}
+.price {
+  font-family: var(--serif); font-size: 19px; font-weight: 500; color: var(--ink);
+}
+.price.is-sold { color: var(--muted); }
+
+.badge {
+  font-size: 9.5px; font-weight: 400; letter-spacing: 0.22em;
+  text-transform: uppercase; color: var(--muted);
+}
+.badge.available { color: var(--gold); }
+.badge.sold { color: var(--muted); }
+
+.card-link {
+  margin-top: 12px;
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--gold); text-decoration: none;
+  border-bottom: 1px solid transparent; align-self: flex-start;
+  padding-bottom: 2px; transition: border-color .3s ease;
+}
+.card-link:hover { border-color: var(--gold); }
+
+.loading, .empty {
+  color: var(--muted); grid-column: 1 / -1; text-align: center;
+  padding: 32px; font-style: italic; font-family: var(--serif); font-size: 17px;
+}
+
+/* ===== Footer ===== */
+.foot { margin-top: 90px; text-align: center; color: var(--muted); }
+.foot .rule { margin-bottom: 30px; }
+.foot p { margin: 0; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; }
+.foot-note {
+  margin-top: 10px !important; font-family: var(--serif); font-style: italic;
+  font-size: 15px; letter-spacing: normal; text-transform: none; color: var(--ink-soft);
+}
+
+/* =====================================================================
+   LANDING PAGE
+   Single-scroll brand page. Shares the variables, monogram, .rule,
+   .eyebrow, .section-label and hero h1 above; everything below is layout
+   for the landing sections.
+   ===================================================================== */
+
+main { display: block; }
+
+.section {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 28px;
+}
+.section.narrow { max-width: 560px; }
+
+/* generous vertical rhythm between sections */
+.section + .section { margin-top: 96px; }
+
+/* Hero overrides (it's now .hero.section) */
+.hero { text-align: center; margin-bottom: 0; padding-top: 104px; }
+.hero .rule { margin: 28px auto 30px; }
+
+.lead {
+  font-family: var(--serif);
+  font-weight: 400; font-style: italic;
+  font-size: clamp(24px, 5vw, 32px);
+  line-height: 1.25;
+  color: var(--ink-soft);
+  margin: 0 auto;
+  letter-spacing: .2px;
+}
+
+/* Call to action */
+.cta-row { margin-top: 40px; }
+.cta {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 11.5px; font-weight: 400;
+  letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--gold);
+  text-decoration: none;
+  border: 1px solid var(--gold);
+  padding: 15px 38px;
+  transition: background .35s ease, color .35s ease;
+}
+.cta:hover { background: var(--gold); color: var(--bg); }
+.cta-note {
+  margin: 16px 0 0;
+  font-size: 12px; letter-spacing: .04em; color: var(--muted);
+  font-style: italic; font-family: var(--serif); font-size: 15px;
+}
+
+/* Prose blocks */
+.prose { color: var(--ink-soft); }
+.prose p {
+  font-size: 17px; line-height: 1.7; margin: 0 0 18px;
+}
+.prose p:last-child { margin-bottom: 0; }
+.prose em {
+  font-family: var(--serif); font-style: italic; font-size: 20px;
+  color: var(--ink);
+}
+.prose.intro {
+  font-family: var(--serif); font-style: italic; font-size: 20px;
+  color: var(--ink); margin: -6px 0 30px;
+}
+
+/* "Who this is for" list */
+.forlist { display: flex; flex-direction: column; }
+.forrow {
+  display: flex; flex-direction: column; gap: 4px;
+  padding: 20px 2px;
+  border-top: 1px solid var(--line-soft);
+}
+.forrow:last-child { border-bottom: 1px solid var(--line-soft); }
+.forrow-title {
+  font-family: var(--serif); font-weight: 500; font-size: 21px;
+  color: var(--ink); letter-spacing: .2px;
+}
+.forrow-note { font-size: 15px; color: var(--muted); }
+
+/* Invitation */
+.invite { text-align: center; }
+.invite-line {
+  font-family: var(--serif); font-style: italic; font-weight: 400;
+  font-size: clamp(26px, 5.5vw, 36px);
+  color: var(--ink); margin: 0 0 34px; line-height: 1.2;
+}
+
+/* Footer / elsewhere */
+.elsewhere {
+  display: flex; justify-content: center; flex-wrap: wrap;
+  gap: 8px 30px; margin-bottom: 8px;
+}
+.elsewhere a {
+  font-family: var(--sans);
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--muted); text-decoration: none;
+  transition: color .3s ease;
+}
+.elsewhere a:hover { color: var(--gold); }
+.colophon {
+  font-size: 10.5px !important; letter-spacing: 0.16em; color: var(--muted);
+}

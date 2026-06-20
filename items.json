@@ -1,0 +1,34 @@
+[
+  {
+    "title": "Herman Miller Aeron",
+    "description": "Size B, fully specified with PostureFit. Single careful owner; kept in a private study.",
+    "price": "$450",
+    "status": "available",
+    "image": "",
+    "link": "mailto:you@secondlandings.com?subject=Enquiry%20—%20Aeron"
+  },
+  {
+    "title": "Leica M6",
+    "description": "35mm rangefinder, recently serviced (CLA). Accompanied by original strap and documentation.",
+    "price": "$2,200",
+    "status": "sold",
+    "image": "",
+    "link": "mailto:you@secondlandings.com?subject=Enquiry%20—%20Leica%20M6"
+  },
+  {
+    "title": "Specialized Allez",
+    "description": "54cm frame, Shimano 105 throughout. A considered first racing machine.",
+    "price": "$600",
+    "status": "sold",
+    "image": "",
+    "link": ""
+  },
+  {
+    "title": "Eames Lounge Chair & Ottoman",
+    "description": "1968 production in black leather and walnut. Very good condition, with the natural patina of careful use.",
+    "price": "$3,800",
+    "status": "available",
+    "image": "",
+    "link": "mailto:you@secondlandings.com?subject=Enquiry%20—%20Eames%20Lounge%20Chair"
+  }
+]

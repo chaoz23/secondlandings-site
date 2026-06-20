@@ -1,0 +1,9 @@
+# macOS
+.DS_Store
+
+# Editor cruft
+*.swp
+*~
+
+# OS / misc
+Thumbs.db
