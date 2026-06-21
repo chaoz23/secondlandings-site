@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backpages · Second Landings</title>
+  <meta name="description" content="A small, rotating cabinet of pieces passing through my hands — watches and objects, some still here, some already gone." />
+
+  <meta property="og:title" content="Backpages · Second Landings" />
+  <meta property="og:description" content="A small, rotating cabinet — watches and objects, some still here, some already gone." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <main class="wrap">
+
+    <!-- ===== HEADER ===== -->
+    <header class="hero">
+      <a class="monogram" href="/" aria-label="Second Landings home">SL</a>
+      <p class="eyebrow">Second Landings</p>
+      <h1>Backpages</h1>
+      <div class="rule" aria-hidden="true"></div>
+      <p class="lead">A small, rotating cabinet of pieces passing through my hands<br />
+      as I lighten the first landing.</p>
+      <p class="backpages-note">Some still here, some already gone. If a piece speaks to you — or
+      you're moving things of your own — <a href="mailto:you@secondlandings.com?subject=Backpages%20enquiry">let's talk</a>.</p>
+    </header>
+
+    <!-- ===== THE CABINET ===== -->
+    <section class="catalog" aria-label="The cabinet">
+      <div class="catalog-head">
+        <p class="section-label">The Cabinet</p>
+        <div class="filters" role="tablist">
+          <button class="filter is-active" data-filter="all">All</button>
+          <button class="filter" data-filter="available">Available</button>
+          <button class="filter" data-filter="sold">Acquired</button>
+        </div>
+      </div>
+      <div id="items" class="items">
+        <p class="loading">Loading…</p>
+      </div>
+    </section>
+
+    <!-- ===== PROPERTY ===== -->
+    <section class="catalog" aria-label="Property">
+      <div class="catalog-head">
+        <p class="section-label">Property</p>
+      </div>
+      <div id="property" class="items">
+        <p class="loading">Loading…</p>
+      </div>
+      <p class="backpages-note">Listed by area only. Held with partners; enquiries handled privately.</p>
+    </section>
+
+    <footer class="foot">
+      <div class="rule" aria-hidden="true"></div>
+      <p><a href="/">← Second Landings</a> &nbsp;·&nbsp; Backpages &nbsp;·&nbsp; © <span id="year"></span></p>
+      <p class="foot-note">Pieces shown as a matter of provenance, not persuasion.</p>
+    </footer>
+
+  </main>
+
+  <script src="../app.js?v=2"></script>
+</body>
+</html>

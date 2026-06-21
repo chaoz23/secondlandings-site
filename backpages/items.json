@@ -1,0 +1,76 @@
+[
+  {
+    "title": "Watch 1 — [maker, model, ref.]",
+    "description": "PLACEHOLDER — replace with: movement/caliber, year, condition, box & papers. Tell Claude the details.",
+    "price": "$0,000",
+    "status": "available",
+    "image": "",
+    "link": "mailto:you@secondlandings.com?subject=Backpages%20—%20Watch%201"
+  },
+  {
+    "title": "Watch 2 — [maker, model, ref.]",
+    "description": "PLACEHOLDER — replace with the real listing.",
+    "price": "$0,000",
+    "status": "available",
+    "image": "",
+    "link": "mailto:you@secondlandings.com?subject=Backpages%20—%20Watch%202"
+  },
+  {
+    "title": "Watch 3 — [maker, model, ref.]",
+    "description": "PLACEHOLDER — replace with the real listing.",
+    "price": "$0,000",
+    "status": "available",
+    "image": "",
+    "link": "mailto:you@secondlandings.com?subject=Backpages%20—%20Watch%203"
+  },
+  {
+    "title": "Watch 4 — [maker, model, ref.]",
+    "description": "PLACEHOLDER — replace with the real listing.",
+    "price": "$0,000",
+    "status": "available",
+    "image": "",
+    "link": "mailto:you@secondlandings.com?subject=Backpages%20—%20Watch%204"
+  },
+  {
+    "title": "Watch 5 — [maker, model, ref.]",
+    "description": "PLACEHOLDER — replace with the real listing.",
+    "price": "$0,000",
+    "status": "available",
+    "image": "",
+    "link": "mailto:you@secondlandings.com?subject=Backpages%20—%20Watch%205"
+  },
+  {
+    "title": "Pinball Machine — [title]",
+    "description": "PLACEHOLDER — which title/era? Restored or original? Sold to a good home.",
+    "price": "",
+    "status": "sold",
+    "image": "",
+    "link": ""
+  },
+  {
+    "title": "2022 Land Rover Defender 110 X",
+    "description": "Top-spec X trim. Enjoyed thoroughly and kept impeccably. Moved on as part of the second landing.",
+    "price": "",
+    "status": "sold",
+    "image": "",
+    "link": ""
+  },
+  {
+    "title": "Kapalua, Maui",
+    "description": "PLACEHOLDER — golf-course short-term rental. Add: beds/baths, the setting, the income story. Available or sold? Listed by area only.",
+    "price": "",
+    "status": "available",
+    "category": "property",
+    "image": "",
+    "link": "mailto:you@secondlandings.com?subject=Backpages%20—%20Kapalua%20property"
+  },
+  {
+    "title": "Pearl District, Portland",
+    "description": "PLACEHOLDER — add framing. Held with partners. Available or sold? Listed by area only.",
+    "price": "",
+    "status": "available",
+    "category": "property",
+    "image": "",
+    "link": "mailto:you@secondlandings.com?subject=Backpages%20—%20Pearl%20District%20property"
+  }
+]

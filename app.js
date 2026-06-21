@@ -2,6 +2,7 @@
 // You normally never need to touch this file; edit items.json instead.
 
 const itemsEl = document.getElementById("items");
+const propertyEl = document.getElementById("property"); // optional second section
 let allItems = [];
 let activeFilter = "all";
 
@@ -21,17 +22,29 @@ async function load() {
 }
 
 function render() {
-  const list =
-    activeFilter === "all"
-      ? allItems
-      : allItems.filter((i) => (i.status || "available") === activeFilter);
+  const matchesFilter = (i) =>
+    activeFilter === "all" || (i.status || "available") === activeFilter;
 
-  if (!list.length) {
-    itemsEl.innerHTML = `<p class="empty">Nothing here yet.</p>`;
-    return;
+  // Objects (everything that isn't tagged as property) go in #items.
+  const objects = allItems.filter(
+    (i) => (i.category || "object") !== "property" && matchesFilter(i)
+  );
+  renderInto(itemsEl, objects);
+
+  // Property (category: "property") goes in #property, if that section exists.
+  if (propertyEl) {
+    const property = allItems.filter(
+      (i) => i.category === "property" && matchesFilter(i)
+    );
+    renderInto(propertyEl, property);
   }
+}
 
-  itemsEl.innerHTML = list.map(card).join("");
+function renderInto(el, list) {
+  if (!el) return;
+  el.innerHTML = list.length
+    ? list.map(card).join("")
+    : `<p class="empty">Nothing here yet.</p>`;
 }
 
 function card(item) {
