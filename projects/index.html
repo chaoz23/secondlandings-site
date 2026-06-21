@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects · Second Landings</title>
+  <meta name="description" content="The second landing, in motion — things being built by hand: a tea garden, a Defender rebuild, a house remodel." />
+
+  <meta property="og:title" content="Projects · Second Landings" />
+  <meta property="og:description" content="The second landing, in motion — things being built by hand." />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css?v=2" />
+</head>
+<body>
+  <main>
+
+    <header class="hero section">
+      <a class="monogram" href="/" aria-label="Second Landings home">SL</a>
+      <p class="eyebrow">Second Landings</p>
+      <h1>Projects</h1>
+      <div class="rule" aria-hidden="true"></div>
+      <p class="lead">The second landing, in motion —<br />things I'm building by hand.</p>
+    </header>
+
+    <section class="section narrow">
+      <p class="section-label">In Progress</p>
+      <nav class="links">
+        <a class="link" href="/projects/tea-garden/">
+          <span class="link-label">The Tea Garden</span>
+          <span class="link-meta">Tea &amp; veg · Renton</span>
+        </a>
+        <a class="link" href="/projects/defender-300tdi/">
+          <span class="link-label">The Defender Rebuild</span>
+          <span class="link-meta">1997 300TDI</span>
+        </a>
+        <a class="link" href="/projects/renton-remodel/">
+          <span class="link-label">The Renton Remodel</span>
+          <span class="link-meta">House next door</span>
+        </a>
+      </nav>
+    </section>
+
+    <footer class="foot section">
+      <div class="rule" aria-hidden="true"></div>
+      <p><a href="/">← Second Landings</a> &nbsp;·&nbsp; Projects &nbsp;·&nbsp; © <span id="year"></span></p>
+    </footer>
+
+  </main>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
