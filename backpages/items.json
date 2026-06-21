@@ -81,7 +81,8 @@
     "price": "",
     "status": "sold",
     "category": "property",
-    "image": "",
+    "image": "images/denver-1616.jpg",
+    "layout": "wide",
     "link": ""
   },
   {
@@ -90,7 +91,8 @@
     "price": "",
     "status": "sold",
     "category": "property",
-    "image": "",
+    "image": "images/nola-pauger.jpg",
+    "layout": "wide",
     "link": ""
   }
 ]
