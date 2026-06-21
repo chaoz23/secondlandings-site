@@ -94,5 +94,23 @@
     "image": "images/nola-pauger.jpg",
     "layout": "wide",
     "link": ""
+  },
+  {
+    "title": "Main Residence — Renton",
+    "description": "Talbot Hill. The home base — an ongoing remodel, much of it by hand.",
+    "price": "",
+    "status": "project",
+    "category": "project",
+    "image": "",
+    "link": ""
+  },
+  {
+    "title": "The House Next Door — Renton",
+    "description": "Bought the place next door; a second remodel underway.",
+    "price": "",
+    "status": "project",
+    "category": "project",
+    "image": "",
+    "link": ""
   }
 ]

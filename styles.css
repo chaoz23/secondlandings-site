@@ -178,6 +178,7 @@ body {
 }
 .badge.available { color: var(--gold); }
 .badge.sold { color: var(--muted); }
+.badge.project { color: var(--gold-soft); }
 
 .card-link {
   margin-top: 12px;

@@ -2,7 +2,8 @@
 // You normally never need to touch this file; edit items.json instead.
 
 const itemsEl = document.getElementById("items");
-const propertyEl = document.getElementById("property"); // optional second section
+const propertyEl = document.getElementById("property"); // optional: for-sale property
+const projectsEl = document.getElementById("projects"); // optional: remodel projects (not for sale)
 let allItems = [];
 let activeFilter = "all";
 
@@ -25,18 +26,27 @@ function render() {
   const matchesFilter = (i) =>
     activeFilter === "all" || (i.status || "available") === activeFilter;
 
-  // Objects (everything that isn't tagged as property) go in #items.
+  // Objects (no category tag) go in #items.
   const objects = allItems.filter(
-    (i) => (i.category || "object") !== "property" && matchesFilter(i)
+    (i) => !["property", "project"].includes(i.category) && matchesFilter(i)
   );
   renderInto(itemsEl, objects);
 
-  // Property (category: "property") goes in #property, if that section exists.
+  // For-sale property (category: "property") goes in #property.
   if (propertyEl) {
-    const property = allItems.filter(
-      (i) => i.category === "property" && matchesFilter(i)
+    renderInto(
+      propertyEl,
+      allItems.filter((i) => i.category === "property" && matchesFilter(i))
     );
-    renderInto(propertyEl, property);
+  }
+
+  // Remodel projects (category: "project") go in #projects — these aren't for
+  // sale, so they ignore the available/acquired filter and always show.
+  if (projectsEl) {
+    renderInto(
+      projectsEl,
+      allItems.filter((i) => i.category === "project")
+    );
   }
 }
 
@@ -48,13 +58,15 @@ function renderInto(el, list) {
 }
 
 function card(item) {
-  const status = item.status === "sold" ? "sold" : "available";
+  const status = ["sold", "project"].includes(item.status) ? item.status : "available";
+  const badgeLabel =
+    status === "sold" ? "Acquired" : status === "project" ? "In Progress" : "Available";
   const media = item.image
     ? `<div class="card-media" style="background-image:url('${escapeAttr(item.image)}')"></div>`
     : `<div class="card-media">Photography forthcoming</div>`;
   const priceCls = status === "sold" ? "price is-sold" : "price";
   const cta =
-    item.link && status !== "sold"
+    item.link && status === "available"
       ? `<a class="card-link" href="${escapeAttr(item.link)}" target="_blank" rel="noopener">Enquire</a>`
       : "";
 
@@ -68,7 +80,7 @@ function card(item) {
         <p class="card-desc">${escapeHtml(item.description || "")}</p>
         <div class="card-foot">
           <span class="${priceCls}">${escapeHtml(item.price || "")}</span>
-          <span class="badge ${status}">${status === "sold" ? "Acquired" : "Available"}</span>
+          <span class="badge ${status}">${badgeLabel}</span>
         </div>
         ${cta}
       </div>
