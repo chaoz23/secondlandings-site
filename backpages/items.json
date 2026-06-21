@@ -44,7 +44,8 @@
     "description": "An original of the Popadiuk classic — the trunk, the levitating ball, the spinning subway. Cherished, kept playfield-clean and fully working; passed on to a good home.",
     "price": "",
     "status": "sold",
-    "image": "images/theatre-of-magic.jpg",
+    "image": "images/theatre-of-magic-art.jpg",
+    "layout": "wide",
     "link": ""
   },
   {
