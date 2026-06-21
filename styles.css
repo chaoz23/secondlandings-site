@@ -308,6 +308,10 @@ main { display: block; }
   font-size: 10.5px !important; letter-spacing: 0.16em; color: var(--muted);
 }
 
+/* Backpages: full-width "wide" cards for landscape subjects (vehicles, property) */
+.card.wide { grid-column: 1 / -1; }
+.card.wide .card-media { aspect-ratio: 16 / 10; }
+
 /* Backpages: center the cabinet header to match the centered hero */
 .catalog { margin-top: 60px; }
 .catalog-head { display: block; text-align: center; margin-bottom: 30px; }

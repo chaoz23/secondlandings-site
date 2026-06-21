@@ -58,8 +58,10 @@ function card(item) {
       ? `<a class="card-link" href="${escapeAttr(item.link)}" target="_blank" rel="noopener">Enquire</a>`
       : "";
 
+  const wide = item.layout === "wide" ? " wide" : "";
+
   return `
-    <article class="card">
+    <article class="card${wide}">
       ${media}
       <div class="card-body">
         <h3 class="card-title">${escapeHtml(item.title || "Untitled")}</h3>

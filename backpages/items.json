@@ -49,10 +49,11 @@
   },
   {
     "title": "2022 Land Rover Defender 110 X",
-    "description": "Top-spec X trim. Enjoyed thoroughly and kept impeccably. Moved on as part of the second landing.",
+    "description": "Top-spec X trim in black. Enjoyed thoroughly and kept impeccably. Moved on as part of the second landing.",
     "price": "",
     "status": "sold",
-    "image": "",
+    "image": "images/defender.jpg",
+    "layout": "wide",
     "link": ""
   },
   {
