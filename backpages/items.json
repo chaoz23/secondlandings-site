@@ -111,6 +111,27 @@
     "status": "project",
     "category": "project",
     "image": "",
-    "link": ""
+    "link": "",
+    "page": "/projects/renton-remodel/"
+  },
+  {
+    "title": "1997 Defender 300TDI — Rebuild",
+    "description": "The all-mechanical Defender, rebuilt by hand. (Not the 2022 X above — a different truck entirely.)",
+    "price": "",
+    "status": "project",
+    "category": "project",
+    "image": "",
+    "link": "",
+    "page": "/projects/defender-300tdi/"
+  },
+  {
+    "title": "The Tea Garden",
+    "description": "A tea and vegetable garden, built from scratch — slow on purpose.",
+    "price": "",
+    "status": "project",
+    "category": "project",
+    "image": "",
+    "link": "",
+    "page": "/projects/tea-garden/"
   }
 ]

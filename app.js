@@ -70,6 +70,10 @@ function card(item) {
       ? `<a class="card-link" href="${escapeAttr(item.link)}" target="_blank" rel="noopener">Enquire</a>`
       : "";
 
+  const projectLink = item.page
+    ? `<a class="card-link" href="${escapeAttr(item.page)}">View project</a>`
+    : "";
+
   const wide = item.layout === "wide" ? " wide" : "";
 
   return `
@@ -83,6 +87,7 @@ function card(item) {
           <span class="badge ${status}">${badgeLabel}</span>
         </div>
         ${cta}
+        ${projectLink}
       </div>
     </article>`;
 }
