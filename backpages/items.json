@@ -73,5 +73,23 @@
     "category": "property",
     "image": "",
     "link": "mailto:you@secondlandings.com?subject=Backpages%20—%20Pearl%20District%20property"
+  },
+  {
+    "title": "Platt Park, Denver",
+    "description": "1616 S Broadway #314 (80210) — condominium. Sold as part of the unwind.",
+    "price": "",
+    "status": "sold",
+    "category": "property",
+    "image": "",
+    "link": ""
+  },
+  {
+    "title": "Pauger Street, New Orleans",
+    "description": "5025 Pauger St (70122). Sold as part of the unwind.",
+    "price": "",
+    "status": "sold",
+    "category": "property",
+    "image": "",
+    "link": ""
   }
 ]
