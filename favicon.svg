@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <style>
+    .ink { fill: #1c1a17; }
+    @media (prefers-color-scheme: dark) { .ink { fill: #efe9dc; } }
+  </style>
+  <!-- the dawning sliver of a planet — a convex limb the 2 stands on -->
+  <path class="ink" d="M6 54 Q32 36 58 54 Q32 44 6 54 Z"/>
+  <!-- the numeral 2 -->
+  <text class="ink" x="32" y="46" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif" font-weight="600"
+        font-size="42">2</text>
+</svg>
