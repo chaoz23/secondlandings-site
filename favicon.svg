@@ -1,12 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <style>
-    .ink { fill: #1c1a17; }
-    @media (prefers-color-scheme: dark) { .ink { fill: #efe9dc; } }
-  </style>
+  <!-- solid espresso tile so the mark reads on light AND dark tabs -->
+  <rect width="64" height="64" rx="12" fill="#15140f"/>
   <!-- the dawning sliver of a planet — a convex limb the 2 stands on -->
-  <path class="ink" d="M6 54 Q32 36 58 54 Q32 44 6 54 Z"/>
+  <path d="M6 54 Q32 36 58 54 Q32 44 6 54 Z" fill="#efe9dc"/>
   <!-- the numeral 2 -->
-  <text class="ink" x="32" y="46" text-anchor="middle"
+  <text x="32" y="46" text-anchor="middle"
         font-family="Georgia, 'Times New Roman', serif" font-weight="600"
-        font-size="42">2</text>
+        font-size="42" fill="#efe9dc">2</text>
 </svg>
