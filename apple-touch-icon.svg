@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#15140f"/>
+  <svg x="96" y="96" width="320" height="320" viewBox="0 0 64 64">
+    <path d="M6 54 Q32 36 58 54 Q32 44 6 54 Z" fill="#efe9dc"/>
+    <text x="32" y="46" text-anchor="middle"
+          font-family="Georgia, 'Times New Roman', serif" font-weight="600"
+          font-size="42" fill="#efe9dc">2</text>
+  </svg>
+</svg>
