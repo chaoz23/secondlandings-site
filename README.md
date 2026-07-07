@@ -14,6 +14,7 @@ page leads with that purpose and invites readers to the Substack.
 | `styles.css` | Design system — two themes (ivory + espresso, auto by `prefers-color-scheme`) | Tweak colors (via the CSS variables at top), spacing, type |
 | `items.json` | **Dormant** — data for a future `/collection` page; not rendered by the landing page | Ignore unless building the collection page |
 | `app.js` | **Dormant** — renders `items.json` cards; not loaded by the landing page | Ignore unless building the collection page |
+| `inkcheck/` | Public Inkcheck form and human-readable report at `/inkcheck/` | Change checker copy, styling, or its public API URL |
 
 Design language is deliberately high-end and restrained: Cormorant Garamond +
 Jost, antique-brass accent used sparingly, hairline rules, generous whitespace,
@@ -40,3 +41,7 @@ git add -A && git commit -m "…" && git push
 ```
 
 The domain `secondlandings.com` points at the Porkbun static host.
+
+The Inkcheck page calls the separately hosted checker at the URL in its
+`inkcheck-api` meta tag. The service must explicitly allow
+`https://secondlandings.com` as its browser origin before the form will work.
