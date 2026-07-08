@@ -182,7 +182,7 @@ form.addEventListener("submit", async (event) => {
   if (!form.reportValidity()) return;
   submit.disabled = true;
   result.hidden = true;
-  status.textContent = "Running a bounded check…";
+  status.textContent = "Following your story's paths…";
   try {
     const data = new FormData();
     addStoryParts(data);
@@ -192,7 +192,7 @@ form.addEventListener("submit", async (event) => {
     data.append("privacyAcknowledged", String(document.querySelector("#privacy").checked));
 
     const headers = {};
-    const accessCode = document.querySelector("#access-code").value;
+    const accessCode = document.querySelector("#access-code")?.value;
     if (accessCode) headers["X-Inkcheck-Access-Code"] = accessCode;
     const response = await fetch(API_URL, { method: "POST", headers, body: data });
     let body;
