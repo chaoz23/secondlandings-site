@@ -15,38 +15,37 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../styles.css?v=3" />
-  <link rel="stylesheet" href="inkcheck.css?v=1" />
-  <script src="app.js?v=1" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bitter:ital,wght@0,500;0,650;1,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="inkcheck.css?v=2" />
+  <script src="app.js?v=2" defer></script>
 </head>
 <body>
   <main>
     <header class="hero section inkcheck-hero">
-      <a class="monogram" href="/" aria-label="Second Landings home">SL</a>
-      <p class="eyebrow">A free tool for Ink authors</p>
+      <a class="home-link" href="/">Second Landings <span aria-hidden="true">/</span> Tools</a>
+      <div class="story-mark" aria-hidden="true"><span>→</span></div>
+      <p class="eyebrow">A free second pair of eyes for Ink authors</p>
       <h1>Inkcheck</h1>
-      <div class="rule" aria-hidden="true"></div>
-      <p class="lead">Find the path that breaks<br />before your player does.</p>
+      <p class="lead">Follow the branches. Find the snags.<br />Keep the story yours.</p>
     </header>
 
     <section class="section narrow intro-copy">
-      <p class="section-label">What it does</p>
+      <p class="section-label"><span aria-hidden="true">01</span> What it does</p>
       <div class="prose">
-        <p>Inkcheck follows a bounded set of paths through your story and flags compile errors, runtime failures, and content it could not reach. It never rewrites your story or judges the prose.</p>
-        <p>Use the same <code>.ink</code> file you already edit. There is no conversion, archive, manifest, or JSON bundle to make.</p>
+        <p>Inkcheck walks through your story, tries different choices, and points out broken paths or places it could not reach. It never rewrites your work or judges the prose.</p>
+        <p>Bring the same <code>.ink</code> file you already edit—no conversion, repackaging, or special format needed.</p>
       </div>
     </section>
 
     <section class="section checker-shell" aria-labelledby="checker-title">
       <div class="privacy-note">
-        <p class="section-label" id="checker-title">Temporary processing</p>
-        <p>Your source goes directly to the Inkcheck service, is processed in temporary memory-backed storage, and is deleted after the response. Story text and report contents are not logged. For unpublished or sensitive work, <a href="https://github.com/chaoz23/inkcheck#readme">use the local tool</a>.</p>
+        <p class="section-label" id="checker-title"><span aria-hidden="true">02</span> Your story stays yours</p>
+        <p>Your story visits the checker only long enough to make the report, then it is deleted. We do not log your story or report. For unpublished or sensitive work, you can also <a href="https://github.com/chaoz23/inkcheck#readme">run Inkcheck on your own computer</a>.</p>
       </div>
 
       <form id="check-form" novalidate>
         <fieldset class="checker-card">
-          <legend><span>1</span> Add your story</legend>
+          <legend><span>1</span> Choose your story</legend>
           <p class="field-help">Choose the main <code>.ink</code> file, or paste its contents below.</p>
 
           <label class="file-drop" for="main-file">
@@ -84,21 +83,19 @@
         </fieldset>
 
         <fieldset class="checker-card">
-          <legend><span>2</span> Confirm permission</legend>
+          <legend><span>2</span> Confirm it is yours to check</legend>
           <label class="check-row"><input id="authorized" type="checkbox" required /><span>I created these files or am authorized to upload them for this check.</span></label>
           <label class="check-row"><input id="privacy" type="checkbox" required /><span>I understand that this hosted check temporarily uploads the story.</span></label>
           <details class="advanced-options">
-            <summary>Advanced limits and pilot access</summary>
+            <summary>Advanced check limits</summary>
             <div class="limits">
               <label for="max-depth">Maximum choice depth<input id="max-depth" type="number" min="1" max="100" value="30" required /></label>
               <label for="max-states">Maximum states<input id="max-states" type="number" min="1" max="5000" value="500" required /></label>
             </div>
-            <label for="access-code">Pilot access code <span class="optional">if provided</span></label>
-            <input id="access-code" type="password" autocomplete="off" />
           </details>
         </fieldset>
 
-        <button class="run-button" id="submit" type="submit">Run Inkcheck</button>
+        <button class="run-button" id="submit" type="submit"><span>Run Inkcheck</span><span aria-hidden="true">→</span></button>
         <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
       </form>
 
@@ -115,20 +112,20 @@
     </section>
 
     <section class="section narrow limitations">
-      <p class="section-label">Worth knowing</p>
+      <p class="section-label"><span aria-hidden="true">03</span> A friendly reminder</p>
       <div class="prose">
-        <p>This is a bounded mechanical check, not proof that every possible playthrough works. Randomness, host-game <code>EXTERNAL</code> functions, and engine-entered content can limit what it observes.</p>
+        <p>Think of Inkcheck as a second pair of eyes. It can miss things and it can make mistakes, so treat the report as a helpful nudge—not the final word.</p>
+        <p class="small-note">Something look wrong? <a href="https://github.com/chaoz23/inkcheck/issues">Tell us about it.</a></p>
       </div>
     </section>
 
     <footer class="foot section">
-      <p class="section-label">Inkcheck</p>
+      <div class="story-mark small" aria-hidden="true"><span>→</span></div>
       <nav class="elsewhere">
         <a href="https://github.com/chaoz23/inkcheck">Source &amp; local tool</a>
         <a href="https://github.com/chaoz23/inkcheck/issues">Report a problem</a>
       </nav>
-      <div class="rule" aria-hidden="true"></div>
-      <p><a href="/">← Second Landings</a> &nbsp;·&nbsp; © <span id="year"></span></p>
+      <p class="colophon"><a href="/">← Second Landings</a> <span aria-hidden="true">·</span> Made for storytellers <span aria-hidden="true">·</span> © <span id="year"></span></p>
     </footer>
   </main>
 </body>
