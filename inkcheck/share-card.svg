@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Inkcheck</title>
+  <desc id="desc">A free second pair of eyes for stories made with ink.</desc>
+  <rect width="1200" height="630" fill="#efe7d5"/>
+  <g opacity=".35" stroke="#c9b995" stroke-width="2">
+    <path d="M0 70 70 0M0 154 154 0M0 238 238 0M962 630l238-238M1046 630l154-154M1130 630l70-70"/>
+  </g>
+  <path d="M84 492c114-12 166-34 279-27 118 8 149 47 281 37 102-8 154-39 261-30 78 6 118 24 187 22" fill="none" stroke="#246c67" stroke-width="7" stroke-linecap="round" stroke-dasharray="4 18"/>
+  <g transform="translate(88 78) rotate(-3 54 54)">
+    <rect x="8" y="8" width="108" height="108" rx="27" fill="#242334"/>
+    <rect width="108" height="108" rx="27 27 27 8" fill="#c85139" stroke="#242334" stroke-width="6"/>
+    <path d="M30 54h43m-15-18 18 18-18 18" fill="none" stroke="#fffaf0" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="88" y="267" fill="#246c67" font-family="Arial, sans-serif" font-size="24" font-weight="700" letter-spacing="3">A FREE COMMUNITY TOOL</text>
+  <text x="82" y="379" fill="#242334" font-family="Georgia, serif" font-size="102" font-weight="700" letter-spacing="-5">Inkcheck</text>
+  <text x="88" y="447" fill="#535064" font-family="Georgia, serif" font-size="34" font-style="italic">A second pair of eyes for stories made with ink.</text>
+  <rect x="82" y="527" width="510" height="58" rx="10 10 10 3" fill="#fffaf0" stroke="#242334" stroke-width="3"/>
+  <text x="108" y="565" fill="#242334" font-family="Arial, sans-serif" font-size="23" font-weight="700">secondlandings.com/inkcheck</text>
+  <circle cx="1087" cy="463" r="22" fill="#c85139" stroke="#242334" stroke-width="4"/>
+</svg>
