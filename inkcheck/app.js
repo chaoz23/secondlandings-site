@@ -1,4 +1,5 @@
 const API_URL = document.querySelector('meta[name="inkcheck-api"]').content;
+const EVENT_URL = new URL("event", API_URL).href;
 const form = document.querySelector("#check-form");
 const mainFileInput = document.querySelector("#main-file");
 const includeFilesInput = document.querySelector("#include-files");
@@ -18,6 +19,23 @@ const download = document.querySelector("#download");
 let lastResponse = null;
 
 document.querySelector("#year").textContent = new Date().getFullYear();
+
+function trackUsage(event) {
+  fetch(EVENT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ event }),
+    credentials: "omit",
+    cache: "no-store",
+    keepalive: true,
+    referrerPolicy: "no-referrer",
+  }).catch(() => {});
+}
+
+trackUsage("page_view");
+document.querySelector(".support-button")?.addEventListener("click", () => {
+  trackUsage("support_click");
+});
 
 function folderEntries() {
   const entries = Array.from(folderInput.files)
