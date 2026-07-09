@@ -12,8 +12,8 @@
   --line: #c9b995;
   --line-soft: #ded1b5;
   --shadow: rgba(53, 43, 34, .13);
-  --serif: Georgia, "Times New Roman", serif;
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Atkinson Hyperlegible, sans-serif;
+  --serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Atkinson Hyperlegible, Aptos, sans-serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Atkinson Hyperlegible, Aptos, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -91,7 +91,7 @@ code {
   color: var(--forest);
   font-size: 13px;
   font-weight: 700;
-  letter-spacing: .08em;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 .eyebrow { margin: 0 0 12px; }
@@ -99,8 +99,8 @@ code {
 .section-label > span { color: var(--trail); }
 .inkcheck-hero h1 {
   margin: 0;
-  font: 650 clamp(54px, 12vw, 86px)/.98 var(--serif);
-  letter-spacing: -.045em;
+  font: 750 clamp(54px, 12vw, 86px)/.98 var(--serif);
+  letter-spacing: 0;
 }
 .hero-intro { max-width: 610px; margin: 22px auto 0; color: var(--ink-soft); font-size: 18px; }
 .hero-intro a { font-weight: 700; }
@@ -264,7 +264,7 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
 .report-heading .section-label { margin-bottom: 5px; }
 .report-heading h2 { margin: 0; font: 650 30px var(--serif); }
 .quiet-button { padding: 10px 14px; font-size: 13px; box-shadow: 3px 3px 0 var(--ink); }
-.report-summary { color: var(--ink-soft); font: 500 19px/1.45 var(--serif); }
+.report-summary { color: var(--ink-soft); font: 500 18px/1.55 var(--sans); }
 .report-metrics { display: grid; grid-template-columns: repeat(4, 1fr); margin: 25px 0; overflow: hidden; border: 2px solid var(--ink); border-radius: 8px; }
 .report-metrics div { display: grid; gap: 4px; padding: 16px 9px; border-right: 1px solid var(--line); background: var(--paper-deep); text-align: center; }
 .report-metrics div:last-child { border-right: 0; }
@@ -276,12 +276,10 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
 .finding-list { display: grid; gap: 14px; padding: 0; list-style: none; }
 .finding-list li { padding: 15px; border: 1px solid var(--line-soft); border-radius: 8px; background: var(--paper-deep); }
 .finding-list strong { display: block; margin-bottom: 4px; color: var(--ink); font: 650 17px/1.3 var(--serif); }
-.report-findings .finding-meta { margin-bottom: 8px; color: var(--forest); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.report-findings .finding-meta { margin-bottom: 8px; color: var(--forest); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0; }
 .report-findings .finding-path { margin-top: 9px; color: var(--ink); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
 .report-findings .finding-action { margin-top: 9px; color: var(--ink-soft); font-weight: 700; }
 .finding-clear::before { content: "✓ "; color: var(--forest); font-weight: 700; }
-.raw-report { padding-top: 18px; border-top: 2px dotted var(--line); }
-.raw-report pre { max-height: 420px; overflow: auto; padding: 16px; border-radius: 7px; color: var(--ink-soft); background: var(--paper-deep); font-size: 12px; white-space: pre-wrap; }
 .limitations { padding: 26px 28px; border: 2px dashed var(--forest); border-radius: 13px; background: var(--forest-soft); }
 .small-note { font-size: 14px; }
 .foot { padding: 74px 0 44px; color: var(--muted); text-align: center; }

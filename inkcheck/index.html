@@ -33,13 +33,6 @@
     </header>
 
     <section id="checker" class="section checker-shell" aria-label="Inkcheck hosted checker" tabindex="-1">
-      <aside id="local-mode" class="mode-card" aria-label="Run locally">
-        <div>
-          <p>Need a power-user offline solution? Inkcheck can also run locally from <a href="https://www.npmjs.com/package/inkcheck">npm</a> with this command:</p>
-        </div>
-        <code>npx -y inkcheck path/to/story.ink</code>
-      </aside>
-
       <form id="check-form" novalidate>
         <fieldset class="checker-card">
           <legend><span>1</span> Test your story</legend>
@@ -97,7 +90,6 @@
         <p id="result-summary" class="report-summary"></p>
         <div id="result-metrics" class="report-metrics"></div>
         <div id="result-findings" class="report-findings"></div>
-        <details class="raw-report"><summary>Show technical report</summary><pre id="result-json" tabindex="0"></pre></details>
       </section>
     </section>
 
@@ -105,7 +97,7 @@
       <p class="section-label"><span aria-hidden="true">03</span> A friendly reminder</p>
       <div class="prose">
         <p>Think of Inkcheck as an additional set of eyes. It can miss things and it can make mistakes, so treat the report as an automated test coverage signal—not the final all clear.</p>
-        <p class="small-note">Find a bug or an issue in the tool or report? <a href="https://github.com/chaoz23/inkcheck/issues">Tell us about it</a>.</p>
+        <p class="small-note">Found a bug or an issue? <a href="https://github.com/chaoz23/inkcheck/issues">Tell us about it</a>.</p>
       </div>
     </section>
 
@@ -126,6 +118,13 @@
         <a class="support-button" href="https://ko-fi.com/chaoz23">Support Inkcheck <span aria-hidden="true">♥</span></a>
       </aside>
     </section>
+
+    <aside id="local-mode" class="section mode-card" aria-label="Run locally">
+      <div>
+        <p>Need a power-user offline solution? Inkcheck can also run locally from <a href="https://www.npmjs.com/package/inkcheck">npm</a> with this command:</p>
+      </div>
+      <code>npx -y inkcheck path/to/story.ink</code>
+    </aside>
 
     <footer class="foot section">
       <nav class="elsewhere">

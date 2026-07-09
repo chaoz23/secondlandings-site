@@ -17,7 +17,6 @@ const resultTitle = document.querySelector("#result-title");
 const summary = document.querySelector("#result-summary");
 const metrics = document.querySelector("#result-metrics");
 const findings = document.querySelector("#result-findings");
-const resultJson = document.querySelector("#result-json");
 const download = document.querySelector("#download");
 let lastResponse = null;
 
@@ -309,7 +308,7 @@ function renderReport(body) {
   const hasProblems = explore.runtimeErrors.length || explore.unvisitedKnots.length;
   if (explore.truncated) {
     resultTitle.textContent = hasProblems ? "Partial check found review leads" : "Partial check complete";
-    summary.textContent = `Inkcheck ran and found ${countPhrase(explore.endingsFound.length, "ending")}, ${countPhrase(explore.runtimeErrors.length, "runtime error")}, and ${countPhrase(explore.unvisitedKnots.length, "unvisited knot")} in a ${countPhrase(report.stats?.words, "word")} story with ${countPhrase(report.stats?.choices, "choice")}. It may not have seen every reachable path.`;
+    summary.textContent = `Inkcheck ran and found ${countPhrase(explore.endingsFound.length, "ending")}, ${countPhrase(explore.runtimeErrors.length, "runtime error")}, and ${countPhrase(explore.unvisitedKnots.length, "unvisited knot")}.`;
   } else {
     resultTitle.textContent = explore.runtimeErrors.length
       ? "Runtime paths need review"
@@ -382,7 +381,6 @@ form.addEventListener("submit", async (event) => {
     }
     lastResponse = body;
     renderReport(body);
-    resultJson.textContent = JSON.stringify(body.report, null, 2);
     result.hidden = false;
     result.scrollIntoView({ behavior: "smooth", block: "start" });
     result.focus({ preventScroll: true });
