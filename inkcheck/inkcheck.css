@@ -147,26 +147,12 @@ code {
 .support-button:hover { color: #fffaf0; background: var(--trail-dark); transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
 .support-note small { margin-top: 13px; color: var(--muted); font-size: 12px; text-align: center; }
 
-.privacy-note, .checker-card {
+.checker-card {
   border: 2px solid var(--ink);
   border-radius: 13px 13px 13px 4px;
   background: var(--paper);
   box-shadow: 7px 7px 0 var(--shadow);
 }
-.privacy-note { margin-bottom: 28px; padding: 24px 28px; }
-.privacy-note .section-label { margin-bottom: 9px; }
-.privacy-note p { margin: 0 0 16px; color: var(--ink-soft); font-size: 15px; }
-.trust-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px 16px;
-  margin: 0;
-  padding: 0;
-  color: var(--ink-soft);
-  font-size: 14px;
-  list-style: none;
-}
-.trust-list li::before { content: "✓ "; color: var(--forest); font-weight: 700; }
 .mode-card {
   display: flex;
   align-items: center;
@@ -311,10 +297,9 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
   .trailhead { grid-template-columns: 1fr; }
   .community-links { grid-template-columns: 1fr; }
   .mode-card, .selection-summary { align-items: stretch; flex-direction: column; }
-  .trust-list { grid-template-columns: 1fr; }
   .mode-card code { width: 100%; overflow-x: auto; }
   .checker-card { padding: 24px 18px; }
-  .privacy-note, .limitations { padding: 22px 20px; }
+  .limitations { padding: 22px 20px; }
   .file-options { grid-template-columns: 1fr; }
   .report-heading { display: block; }
   .quiet-button { margin-top: 15px; }
