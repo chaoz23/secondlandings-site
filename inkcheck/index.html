@@ -80,6 +80,14 @@
 
         <button class="run-button" id="submit" type="submit"><span>Run Inkcheck</span><span aria-hidden="true">→</span></button>
         <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+        <div id="maze-loader" class="maze-loader" hidden aria-hidden="true">
+          <div class="maze-track">
+            <span class="maze-wall top"></span>
+            <span class="maze-wall mid"></span>
+            <span class="maze-wall bottom"></span>
+            <span class="pixel-explorer"></span>
+          </div>
+        </div>
       </form>
 
       <section id="result" class="checker-card report" hidden aria-labelledby="result-title" tabindex="-1">
