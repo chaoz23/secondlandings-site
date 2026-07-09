@@ -87,21 +87,6 @@ code {
   text-decoration: none;
 }
 .home-link:hover { color: var(--trail); }
-.story-mark {
-  display: grid;
-  place-items: center;
-  width: 68px;
-  height: 68px;
-  margin: 42px auto 25px;
-  border: 3px solid var(--ink);
-  border-radius: 18px 18px 18px 5px;
-  background: var(--trail);
-  box-shadow: 7px 7px 0 var(--ink);
-  transform: rotate(-3deg);
-}
-.story-mark span { color: #fffaf0; font-size: 38px; font-weight: 700; transform: rotate(3deg); }
-.story-mark.small { width: 42px; height: 42px; margin: 0 auto 28px; border-width: 2px; border-radius: 11px 11px 11px 3px; box-shadow: 4px 4px 0 var(--ink); }
-.story-mark.small span { font-size: 24px; }
 .eyebrow, .section-label {
   color: var(--forest);
   font-size: 13px;
@@ -117,35 +102,8 @@ code {
   font: 650 clamp(54px, 12vw, 86px)/.98 var(--serif);
   letter-spacing: -.045em;
 }
-.lead { margin: 24px auto 0; color: var(--ink-soft); font: 500 italic clamp(21px, 4vw, 28px)/1.35 var(--serif); }
 .hero-intro { max-width: 610px; margin: 22px auto 0; color: var(--ink-soft); font-size: 18px; }
 .hero-intro a { font-weight: 700; }
-.hero-actions {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 14px;
-  margin-top: 30px;
-}
-.primary-action, .secondary-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: 46px;
-  padding: 11px 17px;
-  border: 2px solid var(--ink);
-  border-radius: 9px 9px 9px 3px;
-  font-weight: 700;
-  text-decoration: none;
-}
-.primary-action {
-  color: #fffaf0;
-  background: var(--trail);
-  box-shadow: 4px 4px 0 var(--ink);
-}
-.primary-action:hover { color: #fffaf0; background: var(--trail-dark); transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
-.secondary-action { color: var(--ink); background: var(--paper); }
 .prose p { margin: 0 0 18px; color: var(--ink-soft); }
 .prose p:last-child { margin-bottom: 0; }
 .intro-copy { position: relative; padding-left: 27px; border-left: 4px solid var(--trail); }
@@ -220,9 +178,7 @@ code {
   border-radius: 13px;
   background: var(--forest-soft);
 }
-.mode-card .section-label { margin-bottom: 6px; }
 .mode-card p { margin: 0; color: var(--ink-soft); font-size: 15px; }
-.mode-card strong { color: var(--ink); }
 .mode-card code { flex: 0 0 auto; user-select: all; }
 #check-form { display: grid; gap: 24px; }
 #check-form[aria-busy="true"] { opacity: .92; }
@@ -258,10 +214,8 @@ code {
 .file-drop input { max-width: 100%; margin: 13px auto 0; color: var(--ink-soft); font: 14px var(--sans); }
 .file-drop.compact { padding: 18px; }
 .file-options { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.or { display: flex; align-items: center; gap: 14px; margin: 22px 0; color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; }
-.or::before, .or::after { content: ""; flex: 1; border-top: 2px dotted var(--line); }
 .checker-card label:not(.file-drop):not(.check-row) { display: grid; gap: 8px; color: var(--ink-soft); font-size: 14px; font-weight: 700; }
-textarea, select, input[type="number"], input[type="password"] {
+select, input[type="number"], input[type="password"] {
   width: 100%;
   padding: 13px;
   border: 2px solid var(--line);
@@ -270,8 +224,7 @@ textarea, select, input[type="number"], input[type="password"] {
   background: var(--paper-deep);
   font: inherit;
 }
-textarea:focus, select:focus, input:focus { outline: 3px solid color-mix(in srgb, var(--forest) 35%, transparent); outline-offset: 2px; }
-textarea { resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; line-height: 1.55; }
+select:focus, input:focus { outline: 3px solid color-mix(in srgb, var(--forest) 35%, transparent); outline-offset: 2px; }
 details { margin-top: 22px; }
 summary { color: var(--forest); cursor: pointer; font-weight: 700; }
 .selection-summary {
@@ -355,11 +308,9 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
   body { font-size: 16px; }
   .section + .section { margin-top: 56px; }
   .inkcheck-hero { padding-top: 30px; }
-  .story-mark { margin-top: 34px; }
   .trailhead { grid-template-columns: 1fr; }
   .community-links { grid-template-columns: 1fr; }
-  .hero-actions, .mode-card, .selection-summary { align-items: stretch; flex-direction: column; }
-  .primary-action, .secondary-action { width: 100%; }
+  .mode-card, .selection-summary { align-items: stretch; flex-direction: column; }
   .trust-list { grid-template-columns: 1fr; }
   .mode-card code { width: 100%; overflow-x: auto; }
   .checker-card { padding: 24px 18px; }
