@@ -4,7 +4,6 @@ const form = document.querySelector("#check-form");
 const mainFileInput = document.querySelector("#main-file");
 const includeFilesInput = document.querySelector("#include-files");
 const folderInput = document.querySelector("#folder");
-const storyText = document.querySelector("#story-text");
 const rootChoice = document.querySelector("#root-choice");
 const rootSelect = document.querySelector("#root");
 const selectionNote = document.querySelector("#selection-note");
@@ -86,16 +85,8 @@ function refreshSelection() {
     const extraCount = individualEntries().length - 1;
     selectionNote.textContent = `${main.name} selected${extraCount ? ` with ${extraCount} INCLUDE file${extraCount === 1 ? "" : "s"}` : ""}.`;
   } else {
-    rootSelect.add(new Option("main.ink", "main.ink"));
-    const pasted = storyText.value.trim();
-    if (/^\s*INCLUDE\s+/im.test(pasted)) {
-      document.querySelector("#include-options").open = true;
-      selectionNote.textContent = "Pasted contents will be checked as main.ink. It looks like this story uses INCLUDE files; add them above if needed.";
-    } else {
-      selectionNote.textContent = pasted
-        ? "Pasted contents will be checked as main.ink."
-        : "Choose one main file or paste its contents.";
-    }
+    rootSelect.add(new Option("story.ink", "story.ink"));
+    selectionNote.textContent = "Choose one .ink file.";
   }
 }
 
@@ -114,12 +105,10 @@ folderInput.addEventListener("change", () => {
   }
   refreshSelection();
 });
-storyText.addEventListener("input", refreshSelection);
 clearSelection.addEventListener("click", () => {
   mainFileInput.value = "";
   includeFilesInput.value = "";
   folderInput.value = "";
-  storyText.value = "";
   document.querySelector("#include-options").open = false;
   result.hidden = true;
   status.textContent = "";
@@ -135,25 +124,21 @@ function addStoryParts(data) {
     names.add(entry.name);
     data.append(`ink:${entry.name}`, entry.file, entry.file.name);
   }
-  if (!folder.length && !mainFileInput.files.length) {
-    if (!storyText.value.trim()) throw new Error("Choose the main .ink file or paste its contents first.");
-    data.append("ink:main.ink", new Blob([storyText.value], { type: "text/plain" }), "main.ink");
-    names.add("main.ink");
-  }
-  const root = folder.length ? rootSelect.value : mainFileInput.files[0]?.name || "main.ink";
+  if (!folder.length && !mainFileInput.files.length) throw new Error("Choose an .ink file first.");
+  const root = folder.length ? rootSelect.value : mainFileInput.files[0]?.name || "story.ink";
   if (!names.has(root)) throw new Error("Choose the file that starts the story.");
   data.append("root", root);
 }
 
 function readinessMessage() {
   if (folderInput.files.length && !folderEntries().length) {
-    return "The selected folder did not include any .ink files. Choose your project folder, choose the main .ink file, or paste the story contents.";
+    return "The selected folder did not include any .ink files. Choose your project folder or choose an .ink file.";
   }
   if (mainFileInput.files.length && !mainFileInput.files[0].name.toLowerCase().endsWith(".ink")) {
-    return "Choose a main file ending in .ink, or paste the story contents.";
+    return "Choose a file ending in .ink.";
   }
-  if (!folderEntries().length && !mainFileInput.files.length && !storyText.value.trim()) {
-    return "Choose the main .ink file or paste its contents first.";
+  if (!folderEntries().length && !mainFileInput.files.length) {
+    return "Choose an .ink file first.";
   }
   if (!authorized.checked && !privacy.checked) {
     return "Check the two confirmation boxes, then run Inkcheck.";
