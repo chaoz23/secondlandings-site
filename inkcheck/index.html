@@ -27,22 +27,15 @@
   <main>
     <header class="hero section inkcheck-hero">
       <a class="home-link" href="/">Second Landings <span aria-hidden="true">/</span> Tools</a>
-      <div class="story-mark" aria-hidden="true"><span>→</span></div>
       <p class="eyebrow">A free community tool for people writing with ink</p>
       <h1>Inkcheck</h1>
       <p class="hero-intro">An independent, open-source second pair of eyes for stories made with <a href="https://www.inklestudios.com/ink">ink</a>, inkle’s language for interactive narrative.</p>
-      <p class="lead">Follow the branches. Find the snags.<br />Keep the story yours.</p>
-      <nav class="hero-actions" aria-label="Inkcheck actions">
-        <a class="primary-action" href="#checker">Check my .ink file <span aria-hidden="true">→</span></a>
-        <a class="secondary-action" href="#local-mode">Run locally instead</a>
-      </nav>
     </header>
 
     <section class="section narrow intro-copy">
       <p class="section-label"><span aria-hidden="true">01</span> What it does</p>
       <div class="prose">
-        <p>Inkcheck walks through your story, tries different choices, and points out broken paths or places it could not reach. It never rewrites your work or judges the prose.</p>
-        <p>Bring the same <code>.ink</code> file you already edit—no conversion, repackaging, or special format needed.</p>
+        <p>Inkcheck automatically explores your story <code>.ink</code> file logic, tries different choices, and produces a report of broken paths or places it could not reach to help automate quality assurance.</p>
       </div>
     </section>
 
@@ -61,26 +54,21 @@
 
       <aside id="local-mode" class="mode-card" aria-label="Run locally">
         <div>
-          <p class="section-label">No-upload option</p>
-          <p><strong>Run locally instead</strong> for unpublished, embargoed, jam-restricted, client, or otherwise sensitive work.</p>
+          <p>Need a power-user offline solution? Inkcheck can also run locally from <a href="https://www.npmjs.com/package/inkcheck">npm</a> with this command:</p>
         </div>
-        <code>npx -y inkcheck path/to/main.ink</code>
+        <code>npx -y inkcheck path/to/story.ink</code>
       </aside>
 
       <form id="check-form" novalidate>
         <fieldset class="checker-card">
-          <legend><span>1</span> Choose your story</legend>
-          <p class="field-help">Choose the main <code>.ink</code> file, or paste its contents below.</p>
+          <legend><span>1</span> Test your story</legend>
+          <p class="field-help">Choose the <code>.ink</code> file you want Inkcheck to test.</p>
 
           <label class="file-drop" for="main-file">
-            <strong>Choose the main .ink file</strong>
+            <strong>Choose an .ink file</strong>
             <span>Upload the original file unchanged</span>
             <input id="main-file" type="file" accept=".ink,text/plain" />
           </label>
-
-          <p class="or"><span>or paste</span></p>
-          <label for="story-text">Main file contents</label>
-          <textarea id="story-text" rows="10" spellcheck="false" placeholder="Hello, world.&#10;-> END"></textarea>
 
           <details id="include-options">
             <summary>My story uses <code>INCLUDE</code> files</summary>
@@ -88,7 +76,7 @@
             <div class="file-options">
               <label class="file-drop compact" for="include-files">
                 <strong>Add INCLUDE files</strong>
-                <span>Files beside the main file</span>
+                <span>Files beside the story file</span>
                 <input id="include-files" type="file" accept=".ink,text/plain" multiple />
               </label>
               <label class="file-drop compact" for="folder">
@@ -101,10 +89,10 @@
 
           <div id="root-choice" hidden>
             <label for="root">Which file starts the story?</label>
-            <select id="root"><option value="main.ink">main.ink</option></select>
+            <select id="root"><option value="story.ink">story.ink</option></select>
           </div>
           <div class="selection-summary">
-            <p id="selection-note" class="selection-note">Choose one main file or paste its contents.</p>
+            <p id="selection-note" class="selection-note">Choose one .ink file.</p>
             <button id="clear-selection" class="text-button" type="button">Clear selection</button>
           </div>
         </fieldset>
@@ -134,8 +122,8 @@
     <section class="section narrow limitations">
       <p class="section-label"><span aria-hidden="true">03</span> A friendly reminder</p>
       <div class="prose">
-        <p>Think of Inkcheck as a second pair of eyes. It can miss things and it can make mistakes, so treat the report as a helpful nudge—not the final word.</p>
-        <p class="small-note">Something look wrong? <a href="https://github.com/chaoz23/inkcheck/issues">Tell us about it.</a></p>
+        <p>Think of Inkcheck as an additional set of eyes. It can miss things and it can make mistakes, so treat the report as an automated test coverage signal—not the final all clear.</p>
+        <p class="small-note">Find a bug or an issue in the tool or report? <a href="https://github.com/chaoz23/inkcheck/issues">Tell us about it</a>.</p>
       </div>
     </section>
 
@@ -152,14 +140,12 @@
         </nav>
       </div>
       <aside class="support-note" aria-label="Support Inkcheck">
-        <p><strong>Free to use. No ads. No accounts.</strong> Inkcheck costs about $12 a month to keep online. If it saves you time, you can help keep it running.</p>
+        <p><strong>Free to use. No ads. No accounts.</strong> Inkcheck relies on generous gifts of time and hosting to keep online. If it saves you time, you can help keep it running.</p>
         <a class="support-button" href="https://ko-fi.com/chaoz23">Support Inkcheck <span aria-hidden="true">♥</span></a>
-        <small>Entirely optional—Inkcheck stays free.</small>
       </aside>
     </section>
 
     <footer class="foot section">
-      <div class="story-mark small" aria-hidden="true"><span>→</span></div>
       <nav class="elsewhere">
         <a href="https://github.com/chaoz23/inkcheck">Source &amp; local tool</a>
         <a href="https://github.com/chaoz23/inkcheck/blob/main/LICENSE">MIT License</a>
