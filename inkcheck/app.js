@@ -10,6 +10,7 @@ const selectionNote = document.querySelector("#selection-note");
 const clearSelection = document.querySelector("#clear-selection");
 const submit = document.querySelector("#submit");
 const status = document.querySelector("#form-status");
+const mazeLoader = document.querySelector("#maze-loader");
 const authorized = document.querySelector("#authorized");
 const privacy = document.querySelector("#privacy");
 const result = document.querySelector("#result");
@@ -341,6 +342,10 @@ function setStatus(message, issueUrl) {
   }
 }
 
+function setLoading(isLoading) {
+  mazeLoader.hidden = !isLoading;
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const message = readinessMessage();
@@ -355,6 +360,7 @@ form.addEventListener("submit", async (event) => {
   }
   submit.disabled = true;
   form.setAttribute("aria-busy", "true");
+  setLoading(true);
   result.hidden = true;
   setStatus("Uploading files and starting the check…");
   try {
@@ -394,6 +400,7 @@ form.addEventListener("submit", async (event) => {
   } finally {
     submit.disabled = false;
     form.removeAttribute("aria-busy");
+    setLoading(false);
   }
 });
 
