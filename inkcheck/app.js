@@ -132,39 +132,130 @@ function metric(label, value) {
   return item;
 }
 
-function finding(title, items, emptyMessage) {
+const SEVERITY_LABELS = {
+  error: "Errors to fix first",
+  warning: "Warnings to review",
+  note: "Coverage notes",
+};
+
+function fallbackHumanFindings(report) {
+  const out = [];
+  const compile = report.compile || {};
+  for (const issue of compile.issues || []) {
+    const severity = issue.severity === "ERROR" || issue.severity === "RUNTIME ERROR"
+      ? "error"
+      : issue.severity === "WARNING"
+        ? "warning"
+        : "note";
+    out.push({
+      severity,
+      category: issue.severity === "ERROR" ? "Compiler error" : issue.severity === "WARNING" ? "Compiler warning" : "Compiler note",
+      title: issue.message || issue.raw || "Compiler finding",
+      message: issue.message || issue.raw || "Compiler returned a finding without details.",
+      file: issue.file,
+      line: issue.line,
+      action: severity === "error"
+        ? "Fix this source line first; Inkcheck cannot explore the story until it compiles."
+        : "Review this compiler note and decide whether the story should change.",
+    });
+  }
+  const explore = report.explore || {};
+  for (const error of explore.runtimeErrors || []) {
+    out.push({
+      severity: "error",
+      category: "Runtime error",
+      title: (error.message || "Runtime error").replace(/\s*\(at [^)]+\)\s*$/, ""),
+      message: error.message || "Ink hit a runtime error on this path.",
+      file: error.sourceLocation?.file,
+      line: error.sourceLocation?.line,
+      approximateLocation: error.sourceLocation?.approximate,
+      path: error.path,
+      action: "Follow the choice path, then inspect the source near this location for a bad divert, variable, expression, or runtime-only edge case.",
+    });
+  }
+  for (const knot of explore.unvisitedKnots || []) {
+    out.push({
+      severity: "warning",
+      category: "Unvisited content",
+      title: `No explored path reached ${knot.name}`,
+      message: `The knot ${knot.name} was not visited by any explored path.`,
+      file: knot.file,
+      line: knot.line,
+      action: "If this scene should be reachable, add or repair a divert/choice that leads here. If it is intentionally unused, mark it for yourself or remove it.",
+    });
+  }
+  return out.sort((a, b) => ["error", "warning", "note"].indexOf(a.severity) - ["error", "warning", "note"].indexOf(b.severity));
+}
+
+function findingGroup(title, group) {
   const section = document.createElement("section");
   const heading = document.createElement("h3");
   heading.textContent = title;
   section.append(heading);
-  if (!items?.length) {
-    const empty = document.createElement("p");
-    empty.className = "finding-clear";
-    empty.textContent = emptyMessage;
-    section.append(empty);
-    return section;
-  }
-  const list = document.createElement("ul");
-  for (const item of items) {
+  const list = document.createElement("ol");
+  list.className = "finding-list";
+  for (const item of group) {
     const row = document.createElement("li");
-    row.textContent = typeof item === "string" ? item : item.message || JSON.stringify(item);
+    const itemTitle = document.createElement("strong");
+    itemTitle.textContent = item.title || item.message || "Finding";
+    const meta = document.createElement("p");
+    meta.className = "finding-meta";
+    const bits = [item.category];
+    if (item.file) bits.push(`${item.file}${item.line ? `:${item.line}` : ""}${item.approximateLocation ? " (approx.)" : ""}`);
+    meta.textContent = bits.join(" · ");
+    const message = document.createElement("p");
+    message.textContent = item.message || "";
+    row.append(itemTitle, meta, message);
+    if (item.path?.length) {
+      const path = document.createElement("p");
+      path.className = "finding-path";
+      path.textContent = `Choice path: ${item.path.join(" → ")}`;
+      row.append(path);
+    }
+    if (item.action) {
+      const action = document.createElement("p");
+      action.className = "finding-action";
+      action.textContent = `Next step: ${item.action}`;
+      row.append(action);
+    }
     list.append(row);
   }
   section.append(list);
   return section;
 }
 
+function renderHumanFindings(items) {
+  findings.replaceChildren();
+  if (!items.length) {
+    const section = document.createElement("section");
+    const heading = document.createElement("h3");
+    const empty = document.createElement("p");
+    heading.textContent = "Actionable findings";
+    empty.className = "finding-clear";
+    empty.textContent = "No compiler errors, runtime errors, or unreachable knots were found in this check.";
+    section.append(heading, empty);
+    findings.append(section);
+    return;
+  }
+  for (const severity of ["error", "warning", "note"]) {
+    const group = items.filter((item) => item.severity === severity);
+    if (group.length) findings.append(findingGroup(SEVERITY_LABELS[severity], group));
+  }
+}
+
 function renderReport(body) {
   const report = body.report || {};
   const compile = report.compile || {};
   const explore = report.explore;
+  const humanFindings = Array.isArray(body.humanFindings)
+    ? body.humanFindings
+    : fallbackHumanFindings(report);
   metrics.replaceChildren();
-  findings.replaceChildren();
 
   if (!compile.success) {
     summary.textContent = `The story did not compile. Fix the ${compile.errors || "reported"} error${compile.errors === 1 ? "" : "s"} below, then run it again.`;
     metrics.append(metric("compile errors", compile.errors ?? "—"), metric("warnings", compile.warnings ?? "—"));
-    findings.append(finding("Compiler findings", compile.issues, "No compiler details were returned."));
+    renderHumanFindings(humanFindings);
     return;
   }
 
@@ -183,16 +274,7 @@ function renderReport(body) {
     metric("runtime errors", explore.runtimeErrors.length),
     metric("unvisited knots", explore.unvisitedKnots.length)
   );
-  findings.append(
-    finding("Runtime errors", explore.runtimeErrors, "None found in the paths checked."),
-    finding("Unvisited knots", explore.unvisitedKnots, "Every reported knot was reached."),
-    finding("Compiler notes", compile.issues, "No compiler warnings or TODOs.")
-  );
-  const limitations = [];
-  if (explore.truncated) limitations.push("The check reached its state or depth limit, so coverage is partial.");
-  if (explore.randomnessDetected) limitations.push("The story uses randomness; another run may follow different paths.");
-  if (explore.externalFunctionsStubbed?.length) limitations.push(`EXTERNAL functions were stubbed: ${explore.externalFunctionsStubbed.join(", ")}.`);
-  if (limitations.length) findings.append(finding("Coverage notes", limitations, ""));
+  renderHumanFindings(humanFindings);
 }
 
 function setStatus(message, issueUrl) {
