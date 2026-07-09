@@ -8,11 +8,13 @@ const storyText = document.querySelector("#story-text");
 const rootChoice = document.querySelector("#root-choice");
 const rootSelect = document.querySelector("#root");
 const selectionNote = document.querySelector("#selection-note");
+const clearSelection = document.querySelector("#clear-selection");
 const submit = document.querySelector("#submit");
 const status = document.querySelector("#form-status");
 const authorized = document.querySelector("#authorized");
 const privacy = document.querySelector("#privacy");
 const result = document.querySelector("#result");
+const resultTitle = document.querySelector("#result-title");
 const summary = document.querySelector("#result-summary");
 const metrics = document.querySelector("#result-metrics");
 const findings = document.querySelector("#result-findings");
@@ -37,6 +39,9 @@ function trackUsage(event) {
 trackUsage("page_view");
 document.querySelector(".support-button")?.addEventListener("click", () => {
   trackUsage("support_click");
+});
+document.querySelector('a[href="#local-mode"]')?.addEventListener("click", () => {
+  trackUsage("local_command_clicked");
 });
 
 function folderEntries() {
@@ -82,9 +87,15 @@ function refreshSelection() {
     selectionNote.textContent = `${main.name} selected${extraCount ? ` with ${extraCount} INCLUDE file${extraCount === 1 ? "" : "s"}` : ""}.`;
   } else {
     rootSelect.add(new Option("main.ink", "main.ink"));
-    selectionNote.textContent = storyText.value.trim()
-      ? "Pasted contents will be checked as main.ink."
-      : "Choose one main file or paste its contents.";
+    const pasted = storyText.value.trim();
+    if (/^\s*INCLUDE\s+/im.test(pasted)) {
+      document.querySelector("#include-options").open = true;
+      selectionNote.textContent = "Pasted contents will be checked as main.ink. It looks like this story uses INCLUDE files; add them above if needed.";
+    } else {
+      selectionNote.textContent = pasted
+        ? "Pasted contents will be checked as main.ink."
+        : "Choose one main file or paste its contents.";
+    }
   }
 }
 
@@ -104,6 +115,16 @@ folderInput.addEventListener("change", () => {
   refreshSelection();
 });
 storyText.addEventListener("input", refreshSelection);
+clearSelection.addEventListener("click", () => {
+  mainFileInput.value = "";
+  includeFilesInput.value = "";
+  folderInput.value = "";
+  storyText.value = "";
+  document.querySelector("#include-options").open = false;
+  result.hidden = true;
+  status.textContent = "";
+  refreshSelection();
+});
 
 function addStoryParts(data) {
   const folder = folderEntries();
@@ -218,18 +239,6 @@ function fallbackHumanFindings(report) {
       action: "If this scene should be reachable, add or repair a divert/choice that leads here. If it is intentionally unused, mark it for yourself or remove it.",
     });
   }
-  if (explore.truncated) {
-    const limits = explore.limits || {};
-    out.push({
-      severity: "warning",
-      category: "Coverage note",
-      title: "Inkcheck found useful results before stopping its hosted pass",
-      message: limits.maxDepth || limits.maxStates
-        ? `This hosted run explored until max depth ${limits.maxDepth || "?"} or max states ${limits.maxStates || "?"}, so there may be more paths beyond this report.`
-        : "This hosted run explored until its configured coverage boundary, so there may be more paths beyond this report.",
-      action: "Use the findings above as real review leads. If you need a deeper hosted pass, file an issue and we can tune the service.",
-    });
-  }
   return out.sort((a, b) => ["error", "warning", "note"].indexOf(a.severity) - ["error", "warning", "note"].indexOf(b.severity));
 }
 
@@ -299,6 +308,7 @@ function renderReport(body) {
   metrics.replaceChildren();
 
   if (!compile.success) {
+    resultTitle.textContent = "Fix compile errors first";
     summary.textContent = `The story did not compile. Fix the ${compile.errors || "reported"} error${compile.errors === 1 ? "" : "s"} below, then run it again.`;
     metrics.append(metric("compile errors", compile.errors ?? "—"), metric("warnings", compile.warnings ?? "—"));
     renderHumanFindings(humanFindings);
@@ -306,14 +316,21 @@ function renderReport(body) {
   }
 
   if (!explore) {
+    resultTitle.textContent = "Compiled, but report is incomplete";
     summary.textContent = "The story compiled, but no exploration report was returned.";
     return;
   }
 
   const hasProblems = explore.runtimeErrors.length || explore.unvisitedKnots.length;
   if (explore.truncated) {
+    resultTitle.textContent = hasProblems ? "Partial check found review leads" : "Partial check complete";
     summary.textContent = `Inkcheck ran and found ${countPhrase(explore.endingsFound.length, "ending")}, ${countPhrase(explore.runtimeErrors.length, "runtime error")}, and ${countPhrase(explore.unvisitedKnots.length, "unvisited knot")} in a ${countPhrase(report.stats?.words, "word")} story with ${countPhrase(report.stats?.choices, "choice")}. It may not have seen every reachable path.`;
   } else {
+    resultTitle.textContent = explore.runtimeErrors.length
+      ? "Runtime paths need review"
+      : explore.unvisitedKnots.length
+        ? "Reachability review needed"
+        : "No mechanical issues found";
     summary.textContent = hasProblems
     ? "Inkcheck found areas worth reviewing. These are mechanical signals, not judgments about the story."
     : "No runtime failures or unreachable knots were found in this check.";
@@ -353,8 +370,9 @@ form.addEventListener("submit", async (event) => {
     return;
   }
   submit.disabled = true;
+  form.setAttribute("aria-busy", "true");
   result.hidden = true;
-  setStatus("Following your story's paths…");
+  setStatus("Uploading files and starting the check…");
   try {
     const data = new FormData();
     addStoryParts(data);
@@ -364,6 +382,7 @@ form.addEventListener("submit", async (event) => {
     const headers = {};
     const accessCode = document.querySelector("#access-code")?.value;
     if (accessCode) headers["X-Inkcheck-Access-Code"] = accessCode;
+    setStatus("Compiling the story and exploring branches…");
     const response = await fetch(API_URL, { method: "POST", headers, body: data });
     let body;
     try {
@@ -381,6 +400,7 @@ form.addEventListener("submit", async (event) => {
     resultJson.textContent = JSON.stringify(body.report, null, 2);
     result.hidden = false;
     result.scrollIntoView({ behavior: "smooth", block: "start" });
+    result.focus({ preventScroll: true });
     setStatus(`Check complete in ${(body.meta.durationMs / 1000).toFixed(1)} seconds. Uploaded files were deleted after the response.`);
   } catch (error) {
     if (error instanceof TypeError) {
@@ -390,11 +410,13 @@ form.addEventListener("submit", async (event) => {
     }
   } finally {
     submit.disabled = false;
+    form.removeAttribute("aria-busy");
   }
 });
 
 download.addEventListener("click", () => {
   if (!lastResponse) return;
+  trackUsage("report_downloaded");
   const blob = new Blob([JSON.stringify(lastResponse.report, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
