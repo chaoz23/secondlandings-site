@@ -22,8 +22,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bitter:ital,wght@0,500;0,650;1,500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="inkcheck.css?v=3" />
-  <script src="app.js?v=3" defer></script>
+  <link rel="stylesheet" href="inkcheck.css?v=4" />
+  <script src="app.js?v=4" defer></script>
 </head>
 <body>
   <main>
@@ -111,13 +111,6 @@
           <legend><span>2</span> Confirm it is yours to check</legend>
           <label class="check-row"><input id="authorized" type="checkbox" required /><span>I created these files or am authorized to upload them for this check.</span></label>
           <label class="check-row"><input id="privacy" type="checkbox" required /><span>I understand that this hosted check temporarily uploads the story.</span></label>
-          <details class="advanced-options">
-            <summary>Advanced check limits</summary>
-            <div class="limits">
-              <label for="max-depth">Maximum choice depth<input id="max-depth" type="number" min="1" max="100" value="30" required /></label>
-              <label for="max-states">Maximum states<input id="max-states" type="number" min="1" max="5000" value="500" required /></label>
-            </div>
-          </details>
         </fieldset>
 
         <button class="run-button" id="submit" type="submit"><span>Run Inkcheck</span><span aria-hidden="true">→</span></button>

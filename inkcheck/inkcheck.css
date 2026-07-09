@@ -211,7 +211,6 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
 .check-row { display: flex; gap: 12px; align-items: flex-start; margin: 16px 0; color: var(--ink-soft); font-size: 15px; }
 .check-row input { width: 19px; height: 19px; margin-top: 2px; flex: 0 0 auto; accent-color: var(--forest); }
 .advanced-options { padding-top: 18px; border-top: 2px dotted var(--line); }
-.limits { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0 0; }
 .run-button, .quiet-button {
   display: inline-flex;
   align-items: center;
@@ -268,7 +267,7 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
   .community-links { grid-template-columns: 1fr; }
   .checker-card { padding: 24px 18px; }
   .privacy-note, .limitations { padding: 22px 20px; }
-  .file-options, .limits { grid-template-columns: 1fr; }
+  .file-options { grid-template-columns: 1fr; }
   .report-heading { display: block; }
   .quiet-button { margin-top: 15px; }
   .report-metrics { grid-template-columns: 1fr 1fr; }

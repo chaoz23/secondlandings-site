@@ -176,7 +176,7 @@ function renderReport(body) {
   const hasProblems = explore.runtimeErrors.length || explore.unvisitedKnots.length;
   summary.textContent = hasProblems
     ? "Inkcheck found areas worth reviewing. These are mechanical signals, not judgments about the story."
-    : "No runtime failures or unreachable knots were found within the limits of this check.";
+    : "No runtime failures or unreachable knots were found in this check.";
   metrics.append(
     metric("states explored", explore.statesExplored),
     metric("endings found", explore.endingsFound.length),
@@ -195,17 +195,26 @@ function renderReport(body) {
   if (limitations.length) findings.append(finding("Coverage notes", limitations, ""));
 }
 
+function setStatus(message, issueUrl) {
+  status.replaceChildren(document.createTextNode(message));
+  if (issueUrl) {
+    status.append(" ");
+    const link = document.createElement("a");
+    link.href = issueUrl;
+    link.textContent = "File an issue";
+    status.append(link, ".");
+  }
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   if (!form.reportValidity()) return;
   submit.disabled = true;
   result.hidden = true;
-  status.textContent = "Following your story's paths…";
+  setStatus("Following your story's paths…");
   try {
     const data = new FormData();
     addStoryParts(data);
-    data.append("maxDepth", document.querySelector("#max-depth").value);
-    data.append("maxStates", document.querySelector("#max-states").value);
     data.append("authorized", String(document.querySelector("#authorized").checked));
     data.append("privacyAcknowledged", String(document.querySelector("#privacy").checked));
 
@@ -219,17 +228,23 @@ form.addEventListener("submit", async (event) => {
     } catch {
       throw new Error("The checker returned an unreadable response. Please try again shortly.");
     }
-    if (!response.ok) throw new Error(body.error || `The checker could not run this request (${response.status}).`);
+    if (!response.ok) {
+      const error = new Error(body.error || `The checker could not run this request (${response.status}).`);
+      error.issueUrl = body.issueUrl;
+      throw error;
+    }
     lastResponse = body;
     renderReport(body);
     resultJson.textContent = JSON.stringify(body.report, null, 2);
     result.hidden = false;
     result.scrollIntoView({ behavior: "smooth", block: "start" });
-    status.textContent = `Check complete in ${(body.meta.durationMs / 1000).toFixed(1)} seconds. Uploaded files were deleted after the response.`;
+    setStatus(`Check complete in ${(body.meta.durationMs / 1000).toFixed(1)} seconds. Uploaded files were deleted after the response.`);
   } catch (error) {
-    status.textContent = error instanceof TypeError
-      ? "The checker service could not be reached. Please try again later."
-      : error.message;
+    if (error instanceof TypeError) {
+      setStatus("The checker service could not be reached. Please try again later.");
+    } else {
+      setStatus(error.message, error.issueUrl);
+    }
   } finally {
     submit.disabled = false;
   }
