@@ -236,6 +236,7 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
 #root-choice { margin-top: 18px; }
 .check-row { display: flex; gap: 12px; align-items: flex-start; margin: 16px 0; color: var(--ink-soft); font-size: 15px; }
 .check-row input { width: 19px; height: 19px; margin-top: 2px; flex: 0 0 auto; accent-color: var(--forest); }
+.upload-disclaimer { margin: 18px 0 0; padding-top: 16px; border-top: 2px dotted var(--line); color: var(--muted); font-size: 14px; }
 .advanced-options { padding-top: 18px; border-top: 2px dotted var(--line); }
 .run-button, .quiet-button {
   display: inline-flex;

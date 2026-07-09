@@ -32,13 +32,6 @@
       <p class="hero-intro">An independent, open-source second pair of eyes for stories made with <a href="https://www.inklestudios.com/ink">ink</a>, inkle’s language for interactive narrative.</p>
     </header>
 
-    <section class="section narrow intro-copy">
-      <p class="section-label"><span aria-hidden="true">01</span> What it does</p>
-      <div class="prose">
-        <p>Inkcheck automatically explores your story <code>.ink</code> file logic, tries different choices, and produces a report of broken paths or places it could not reach to help automate quality assurance.</p>
-      </div>
-    </section>
-
     <section id="checker" class="section checker-shell" aria-label="Inkcheck hosted checker" tabindex="-1">
       <aside id="local-mode" class="mode-card" aria-label="Run locally">
         <div>
@@ -50,7 +43,7 @@
       <form id="check-form" novalidate>
         <fieldset class="checker-card">
           <legend><span>1</span> Test your story</legend>
-          <p class="field-help">Choose the <code>.ink</code> file you want Inkcheck to test.</p>
+          <p class="field-help"><strong>What it does:</strong> Inkcheck automatically explores your story <code>.ink</code> file logic, tries different choices, and produces a report of broken paths or places it could not reach to help automate quality assurance.</p>
 
           <label class="file-drop" for="main-file">
             <strong>Choose an .ink file</strong>
@@ -89,6 +82,7 @@
           <legend><span>2</span> Confirm it is yours to check</legend>
           <label class="check-row"><input id="authorized" type="checkbox" required /><span>I created these files or am authorized to upload them for this check.</span></label>
           <label class="check-row"><input id="privacy" type="checkbox" required /><span>I understand that this hosted check temporarily uploads the story.</span></label>
+          <p class="upload-disclaimer">Uploaded files are temporarily read then deleted after your test runs complete. Files remain your IP, are never used for training and are never shared with third parties or used for secondary purposes.</p>
         </fieldset>
 
         <button class="run-button" id="submit" type="submit"><span>Run Inkcheck</span><span aria-hidden="true">→</span></button>
