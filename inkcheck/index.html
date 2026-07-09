@@ -19,13 +19,11 @@
   <meta property="og:image:alt" content="Inkcheck — a free second pair of eyes for stories made with ink" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bitter:ital,wght@0,500;0,650;1,500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="inkcheck.css?v=4" />
-  <script src="app.js?v=4" defer></script>
+  <link rel="stylesheet" href="inkcheck.css?v=5" />
+  <script src="app.js?v=5" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#checker">Skip to checker</a>
   <main>
     <header class="hero section inkcheck-hero">
       <a class="home-link" href="/">Second Landings <span aria-hidden="true">/</span> Tools</a>
@@ -34,25 +32,11 @@
       <h1>Inkcheck</h1>
       <p class="hero-intro">An independent, open-source second pair of eyes for stories made with <a href="https://www.inklestudios.com/ink">ink</a>, inkle’s language for interactive narrative.</p>
       <p class="lead">Follow the branches. Find the snags.<br />Keep the story yours.</p>
+      <nav class="hero-actions" aria-label="Inkcheck actions">
+        <a class="primary-action" href="#checker">Check my .ink file <span aria-hidden="true">→</span></a>
+        <a class="secondary-action" href="#local-mode">Run locally instead</a>
+      </nav>
     </header>
-
-    <section class="section narrow trailhead" aria-labelledby="trailhead-title">
-      <div class="community-note">
-        <p class="section-label" id="trailhead-title">New to the trail?</p>
-        <p>Inkcheck is made for the ink community. Learn about the language, meet other writers, or ask for help in the places inkle maintains.</p>
-        <nav class="community-links" aria-label="Official ink resources">
-          <a href="https://www.inklestudios.com/ink">Meet ink <span aria-hidden="true">→</span></a>
-          <a href="https://github.com/inkle/ink#readme">Official guide <span aria-hidden="true">→</span></a>
-          <a href="https://discord.gg/inkle">inkle Discord <span aria-hidden="true">→</span></a>
-          <a href="https://github.com/inkle/ink/discussions">Discussions <span aria-hidden="true">→</span></a>
-        </nav>
-      </div>
-      <aside class="support-note" aria-label="Support Inkcheck">
-        <p><strong>Free to use. No ads. No accounts.</strong> Inkcheck costs about $12 a month to keep online. If it saves you time, you can help keep it running.</p>
-        <a class="support-button" href="https://ko-fi.com/chaoz23">Support Inkcheck <span aria-hidden="true">♥</span></a>
-        <small>Entirely optional—Inkcheck stays free.</small>
-      </aside>
-    </section>
 
     <section class="section narrow intro-copy">
       <p class="section-label"><span aria-hidden="true">01</span> What it does</p>
@@ -62,11 +46,26 @@
       </div>
     </section>
 
-    <section class="section checker-shell" aria-labelledby="checker-title">
+    <section id="checker" class="section checker-shell" aria-labelledby="checker-title" tabindex="-1">
       <div class="privacy-note">
-        <p class="section-label" id="checker-title"><span aria-hidden="true">02</span> Your story stays yours</p>
-        <p>Your story visits the checker only long enough to make the report, then it is deleted. We do not log your story or report. We keep simple daily totals for visits and checks, never visitor profiles. For unpublished or sensitive work, you can also <a href="https://github.com/chaoz23/inkcheck#readme">run Inkcheck on your own computer</a>.</p>
+        <p class="section-label" id="checker-title"><span aria-hidden="true">02</span> Check your story</p>
+        <p>Use the hosted checker for a quick read, or run Inkcheck locally when your story should not leave your computer.</p>
+        <ul class="trust-list" aria-label="What happens to your story">
+          <li>Uploaded only for this check</li>
+          <li>Deleted after the response</li>
+          <li>Not public</li>
+          <li>Not used to train or rewrite</li>
+          <li>Aggregate counts only</li>
+        </ul>
       </div>
+
+      <aside id="local-mode" class="mode-card" aria-label="Run locally">
+        <div>
+          <p class="section-label">No-upload option</p>
+          <p><strong>Run locally instead</strong> for unpublished, embargoed, jam-restricted, client, or otherwise sensitive work.</p>
+        </div>
+        <code>npx -y inkcheck path/to/main.ink</code>
+      </aside>
 
       <form id="check-form" novalidate>
         <fieldset class="checker-card">
@@ -104,7 +103,10 @@
             <label for="root">Which file starts the story?</label>
             <select id="root"><option value="main.ink">main.ink</option></select>
           </div>
-          <p id="selection-note" class="selection-note">Choose one main file or paste its contents.</p>
+          <div class="selection-summary">
+            <p id="selection-note" class="selection-note">Choose one main file or paste its contents.</p>
+            <button id="clear-selection" class="text-button" type="button">Clear selection</button>
+          </div>
         </fieldset>
 
         <fieldset class="checker-card">
@@ -117,9 +119,9 @@
         <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
       </form>
 
-      <section id="result" class="checker-card report" hidden aria-labelledby="result-title">
+      <section id="result" class="checker-card report" hidden aria-labelledby="result-title" tabindex="-1">
         <div class="report-heading">
-          <div><p class="section-label">Your report</p><h2 id="result-title">Check complete</h2></div>
+          <div><p class="section-label">Your report</p><h2 id="result-title">Report ready</h2></div>
           <button id="download" class="quiet-button" type="button">Download JSON</button>
         </div>
         <p id="result-summary" class="report-summary"></p>
@@ -135,6 +137,25 @@
         <p>Think of Inkcheck as a second pair of eyes. It can miss things and it can make mistakes, so treat the report as a helpful nudge—not the final word.</p>
         <p class="small-note">Something look wrong? <a href="https://github.com/chaoz23/inkcheck/issues">Tell us about it.</a></p>
       </div>
+    </section>
+
+
+    <section class="section narrow trailhead" aria-labelledby="trailhead-title">
+      <div class="community-note">
+        <p class="section-label" id="trailhead-title">New to the trail?</p>
+        <p>Inkcheck is made for the ink community. Learn about the language, meet other writers, or ask for help in the places inkle maintains.</p>
+        <nav class="community-links" aria-label="Official ink resources">
+          <a href="https://www.inklestudios.com/ink">Meet ink <span aria-hidden="true">→</span></a>
+          <a href="https://github.com/inkle/ink#readme">Official guide <span aria-hidden="true">→</span></a>
+          <a href="https://discord.gg/inkle">inkle Discord <span aria-hidden="true">→</span></a>
+          <a href="https://github.com/inkle/ink/discussions">Discussions <span aria-hidden="true">→</span></a>
+        </nav>
+      </div>
+      <aside class="support-note" aria-label="Support Inkcheck">
+        <p><strong>Free to use. No ads. No accounts.</strong> Inkcheck costs about $12 a month to keep online. If it saves you time, you can help keep it running.</p>
+        <a class="support-button" href="https://ko-fi.com/chaoz23">Support Inkcheck <span aria-hidden="true">♥</span></a>
+        <small>Entirely optional—Inkcheck stays free.</small>
+      </aside>
     </section>
 
     <footer class="foot section">
