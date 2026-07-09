@@ -185,6 +185,16 @@ code {
   font: 700 14px var(--sans);
 }
 .field-help { margin: 0 0 20px; color: var(--muted); font-size: 15px; }
+.value-note {
+  margin: -6px 0 22px;
+  padding: 13px 15px;
+  border-left: 4px solid var(--forest);
+  border-radius: 6px;
+  color: var(--ink-soft);
+  background: var(--forest-soft);
+  font-size: 15px;
+}
+.value-note strong { color: var(--ink); }
 .file-drop {
   display: grid;
   gap: 5px;
