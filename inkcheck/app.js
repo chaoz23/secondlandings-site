@@ -10,6 +10,8 @@ const rootSelect = document.querySelector("#root");
 const selectionNote = document.querySelector("#selection-note");
 const submit = document.querySelector("#submit");
 const status = document.querySelector("#form-status");
+const authorized = document.querySelector("#authorized");
+const privacy = document.querySelector("#privacy");
 const result = document.querySelector("#result");
 const summary = document.querySelector("#result-summary");
 const metrics = document.querySelector("#result-metrics");
@@ -122,14 +124,41 @@ function addStoryParts(data) {
   data.append("root", root);
 }
 
+function readinessMessage() {
+  if (folderInput.files.length && !folderEntries().length) {
+    return "The selected folder did not include any .ink files. Choose your project folder, choose the main .ink file, or paste the story contents.";
+  }
+  if (mainFileInput.files.length && !mainFileInput.files[0].name.toLowerCase().endsWith(".ink")) {
+    return "Choose a main file ending in .ink, or paste the story contents.";
+  }
+  if (!folderEntries().length && !mainFileInput.files.length && !storyText.value.trim()) {
+    return "Choose the main .ink file or paste its contents first.";
+  }
+  if (!authorized.checked && !privacy.checked) {
+    return "Check the two confirmation boxes, then run Inkcheck.";
+  }
+  if (!authorized.checked) {
+    return "Check the authorization box, then run Inkcheck.";
+  }
+  if (!privacy.checked) {
+    return "Check the temporary-upload box, then run Inkcheck.";
+  }
+  return "";
+}
+
 function metric(label, value) {
   const item = document.createElement("div");
   const number = document.createElement("strong");
   const name = document.createElement("span");
-  number.textContent = String(value);
+  number.textContent = typeof value === "number" ? value.toLocaleString() : String(value);
   name.textContent = label;
   item.append(number, name);
   return item;
+}
+
+function countPhrase(count, singular, plural = `${singular}s`) {
+  const value = Number(count) || 0;
+  return `${value.toLocaleString()} ${value === 1 ? singular : plural}`;
 }
 
 const SEVERITY_LABELS = {
@@ -187,6 +216,18 @@ function fallbackHumanFindings(report) {
       file: knot.file,
       line: knot.line,
       action: "If this scene should be reachable, add or repair a divert/choice that leads here. If it is intentionally unused, mark it for yourself or remove it.",
+    });
+  }
+  if (explore.truncated) {
+    const limits = explore.limits || {};
+    out.push({
+      severity: "warning",
+      category: "Coverage note",
+      title: "Inkcheck found useful results before stopping its hosted pass",
+      message: limits.maxDepth || limits.maxStates
+        ? `This hosted run explored until max depth ${limits.maxDepth || "?"} or max states ${limits.maxStates || "?"}, so there may be more paths beyond this report.`
+        : "This hosted run explored until its configured coverage boundary, so there may be more paths beyond this report.",
+      action: "Use the findings above as real review leads. If you need a deeper hosted pass, file an issue and we can tune the service.",
     });
   }
   return out.sort((a, b) => ["error", "warning", "note"].indexOf(a.severity) - ["error", "warning", "note"].indexOf(b.severity));
@@ -270,10 +311,16 @@ function renderReport(body) {
   }
 
   const hasProblems = explore.runtimeErrors.length || explore.unvisitedKnots.length;
-  summary.textContent = hasProblems
+  if (explore.truncated) {
+    summary.textContent = `Inkcheck ran and found ${countPhrase(explore.endingsFound.length, "ending")}, ${countPhrase(explore.runtimeErrors.length, "runtime error")}, and ${countPhrase(explore.unvisitedKnots.length, "unvisited knot")} in a ${countPhrase(report.stats?.words, "word")} story with ${countPhrase(report.stats?.choices, "choice")}. It may not have seen every reachable path.`;
+  } else {
+    summary.textContent = hasProblems
     ? "Inkcheck found areas worth reviewing. These are mechanical signals, not judgments about the story."
     : "No runtime failures or unreachable knots were found in this check.";
+  }
   metrics.append(
+    metric("words", report.stats?.words ?? "—"),
+    metric("choices", report.stats?.choices ?? "—"),
     metric("states explored", explore.statesExplored),
     metric("endings found", explore.endingsFound.length),
     metric("runtime errors", explore.runtimeErrors.length),
@@ -295,15 +342,24 @@ function setStatus(message, issueUrl) {
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (!form.reportValidity()) return;
+  const message = readinessMessage();
+  if (message) {
+    setStatus(message);
+    form.reportValidity();
+    return;
+  }
+  if (!form.reportValidity()) {
+    setStatus("Review the highlighted fields, then run Inkcheck again.");
+    return;
+  }
   submit.disabled = true;
   result.hidden = true;
   setStatus("Following your story's paths…");
   try {
     const data = new FormData();
     addStoryParts(data);
-    data.append("authorized", String(document.querySelector("#authorized").checked));
-    data.append("privacyAcknowledged", String(document.querySelector("#privacy").checked));
+    data.append("authorized", String(authorized.checked));
+    data.append("privacyAcknowledged", String(privacy.checked));
 
     const headers = {};
     const accessCode = document.querySelector("#access-code")?.value;
