@@ -211,7 +211,6 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
 .check-row { display: flex; gap: 12px; align-items: flex-start; margin: 16px 0; color: var(--ink-soft); font-size: 15px; }
 .check-row input { width: 19px; height: 19px; margin-top: 2px; flex: 0 0 auto; accent-color: var(--forest); }
 .advanced-options { padding-top: 18px; border-top: 2px dotted var(--line); }
-.limits { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0 0; }
 .run-button, .quiet-button {
   display: inline-flex;
   align-items: center;
@@ -245,8 +244,13 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
 .report-metrics span { color: var(--muted); font-size: 10px; font-weight: 700; text-transform: uppercase; }
 .report-findings section { padding: 19px 0; border-top: 2px dotted var(--line); }
 .report-findings h3 { margin: 0 0 8px; font: 650 19px var(--serif); }
-.report-findings p, .report-findings ul { margin: 0; color: var(--ink-soft); font-size: 15px; }
-.report-findings ul { padding-left: 20px; }
+.report-findings p, .report-findings ol { margin: 0; color: var(--ink-soft); font-size: 15px; }
+.finding-list { display: grid; gap: 14px; padding: 0; list-style: none; }
+.finding-list li { padding: 15px; border: 1px solid var(--line-soft); border-radius: 8px; background: var(--paper-deep); }
+.finding-list strong { display: block; margin-bottom: 4px; color: var(--ink); font: 650 17px/1.3 var(--serif); }
+.report-findings .finding-meta { margin-bottom: 8px; color: var(--forest); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.report-findings .finding-path { margin-top: 9px; color: var(--ink); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+.report-findings .finding-action { margin-top: 9px; color: var(--ink-soft); font-weight: 700; }
 .finding-clear::before { content: "✓ "; color: var(--forest); font-weight: 700; }
 .raw-report { padding-top: 18px; border-top: 2px dotted var(--line); }
 .raw-report pre { max-height: 420px; overflow: auto; padding: 16px; border-radius: 7px; color: var(--ink-soft); background: var(--paper-deep); font-size: 12px; white-space: pre-wrap; }
@@ -268,7 +272,7 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
   .community-links { grid-template-columns: 1fr; }
   .checker-card { padding: 24px 18px; }
   .privacy-note, .limitations { padding: 22px 20px; }
-  .file-options, .limits { grid-template-columns: 1fr; }
+  .file-options { grid-template-columns: 1fr; }
   .report-heading { display: block; }
   .quiet-button { margin-top: 15px; }
   .report-metrics { grid-template-columns: 1fr 1fr; }
