@@ -185,6 +185,11 @@ function coverageState(explore) {
 
 function truncationAdvice(explore) {
   const causes = explore.truncatedBy || {};
+  // A memory stop means the story outgrew the shared server; the hosted
+  // checker cannot give it more heap, so point to the local command-line tool.
+  if (causes.memory) {
+    return "This story is large enough that the check stopped to stay within the server's memory. The results here are still real as far as they go — for a broader pass, run the local command-line tool below, where you control memory.";
+  }
   const advice = [];
   if (causes.maxDepth) advice.push(`depth ${explore.limits?.maxDepth ?? "limit"}`);
   if (causes.maxStates) advice.push(`${(explore.limits?.maxStates ?? "state").toLocaleString?.() || explore.limits?.maxStates || "state"} states`);

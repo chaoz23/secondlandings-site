@@ -140,6 +140,7 @@
         <p>Need a power-user offline solution? Inkcheck can also run locally from <a href="https://www.npmjs.com/package/inkcheck">npm</a> with this command:</p>
       </div>
       <code>npx -y inkcheck path/to/story.ink</code>
+      <p class="small-note">This checker explores up to 1,000,000 story states per run and marks the report partial when it stops there. A story doesn't have to be long to exceed that — branching and variables can create many more reachable states than there are choices. For a broader pass, the local command-line tool explores up to 100,000,000 states, lets you set a memory limit, and streams progress as it runs.</p>
     </aside>
 
     <footer class="foot section">
