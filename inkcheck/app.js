@@ -15,6 +15,7 @@ const runProgress = document.querySelector("#run-progress");
 const progressPhase = document.querySelector("#progress-phase");
 const progressBudget = document.querySelector("#progress-budget");
 const progressDetails = document.querySelector("#progress-details");
+const progressTrust = document.querySelector("#progress-trust");
 const cancelCheck = document.querySelector("#cancel-check");
 const authorized = document.querySelector("#authorized");
 const privacy = document.querySelector("#privacy");
@@ -28,6 +29,7 @@ let lastResponse = null;
 let activeJob = null;
 let progressStream = null;
 let progressPoll = null;
+let cancelRequested = false;
 
 document.querySelector("#year").textContent = new Date().getFullYear();
 
@@ -416,6 +418,24 @@ function phaseLabel(phase) {
 
 function renderProgress(event, jobStatus) {
   runProgress.hidden = false;
+  runProgress.dataset.state = jobStatus || "";
+  cancelCheck.hidden = ["complete", "cancelled", "failed"].includes(jobStatus);
+  cancelCheck.disabled = cancelRequested;
+  cancelCheck.textContent = cancelRequested ? "Cancelling..." : "Cancel check";
+  progressTrust.textContent = "Uploaded files are deleted after the check finishes, fails, or is cancelled.";
+  if (jobStatus === "cancelled") {
+    progressPhase.textContent = "Check cancelled";
+    progressBudget.textContent = "The checker stopped this run.";
+    progressDetails.textContent = "Uploaded files were deleted after cancellation.";
+    progressTrust.textContent = "No report was kept for this cancelled hosted check.";
+    return;
+  }
+  if (cancelRequested || jobStatus === "cancelling") {
+    progressPhase.textContent = "Cancelling check";
+    progressBudget.textContent = "Asking the checker to stop this run.";
+    progressDetails.textContent = "This may take a moment while the server closes the active job.";
+    return;
+  }
   if (jobStatus === "queued") {
     progressPhase.textContent = "Waiting for an available checker";
     progressBudget.textContent = "Your upload is queued; the check has not started yet.";
@@ -448,8 +468,16 @@ function stopJobUpdates() {
 function clearJob() {
   stopJobUpdates();
   activeJob = null;
+  cancelRequested = false;
   sessionStorage.removeItem("inkcheck-active-job");
   runProgress.hidden = true;
+}
+
+function stopActiveJobUpdates() {
+  stopJobUpdates();
+  activeJob = null;
+  cancelRequested = false;
+  sessionStorage.removeItem("inkcheck-active-job");
 }
 
 async function fetchJob() {
@@ -469,11 +497,13 @@ async function finishJob(snapshot) {
     result.focus({ preventScroll: true });
     setStatus(`Check complete in ${(job.result.meta.durationMs / 1000).toFixed(1)} seconds. Uploaded files were deleted after the response.`);
   } else if (job.status === "cancelled") {
-    setStatus("Check cancelled. Uploaded files were deleted.");
+    renderProgress(job.progress, "cancelled");
+    setStatus("Check cancelled. Uploaded files were deleted after cancellation.");
+    stopActiveJobUpdates();
   } else {
     setStatus(job.error || "The checker could not finish this request. Uploaded files were deleted.");
   }
-  clearJob();
+  if (job.status !== "cancelled") clearJob();
   submit.disabled = false;
   form.removeAttribute("aria-busy");
   setLoading(false);
@@ -483,12 +513,14 @@ async function refreshJob() {
   const snapshot = await fetchJob();
   if (!snapshot) return;
   const job = snapshot.job;
+  if (activeJob) activeJob.status = job.status;
   renderProgress(job.progress, job.status);
   if (["complete", "cancelled", "failed"].includes(job.status)) await finishJob(snapshot);
 }
 
 function startJob(job) {
   activeJob = job;
+  cancelRequested = false;
   sessionStorage.setItem("inkcheck-active-job", JSON.stringify(job));
   renderProgress(null, job.status);
   setStatus(job.status === "queued" ? "Check queued." : "Starting check…");
@@ -580,15 +612,18 @@ form.addEventListener("submit", async (event) => {
 
 cancelCheck.addEventListener("click", async () => {
   if (!activeJob) return;
+  cancelRequested = true;
   cancelCheck.disabled = true;
-  setStatus("Cancelling check…");
+  renderProgress(null, "cancelling");
+  setStatus("Cancelling check. Uploaded files will still be deleted after the run stops.");
   try {
-    await fetch(jobUrl(activeJob.cancelUrl), { method: "POST", credentials: "omit", cache: "no-store" });
+    const response = await fetch(jobUrl(activeJob.cancelUrl), { method: "POST", credentials: "omit", cache: "no-store" });
+    if (!response.ok) throw new Error("Cancel request failed.");
     await refreshJob();
   } catch {
+    cancelRequested = false;
+    renderProgress(null, activeJob?.status);
     setStatus("Could not cancel this check. It may still be running; the page will keep reconnecting.");
-  } finally {
-    cancelCheck.disabled = false;
   }
 });
 
