@@ -19,8 +19,8 @@
   <meta property="og:image:alt" content="Inkcheck — a free second pair of eyes for stories made with ink" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <link rel="stylesheet" href="inkcheck.css?v=6" />
-  <script src="app.js?v=6" defer></script>
+  <link rel="stylesheet" href="inkcheck.css?v=7" />
+  <script src="app.js?v=7" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#checker">Skip to checker</a>
@@ -81,6 +81,12 @@
 
         <button class="run-button" id="submit" type="submit"><span>Run Inkcheck</span><span aria-hidden="true">→</span></button>
         <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+        <section id="run-progress" class="run-progress" hidden aria-live="polite" aria-label="Check progress">
+          <p id="progress-phase" class="progress-phase">Preparing your check</p>
+          <p id="progress-budget" class="progress-budget"></p>
+          <p id="progress-details" class="progress-details"></p>
+          <button id="cancel-check" class="text-button" type="button">Cancel check</button>
+        </section>
         <div id="maze-loader" class="maze-loader" hidden aria-hidden="true">
           <div class="maze-track">
             <span class="maze-wall top"></span>

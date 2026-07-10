@@ -11,6 +11,11 @@ const clearSelection = document.querySelector("#clear-selection");
 const submit = document.querySelector("#submit");
 const status = document.querySelector("#form-status");
 const mazeLoader = document.querySelector("#maze-loader");
+const runProgress = document.querySelector("#run-progress");
+const progressPhase = document.querySelector("#progress-phase");
+const progressBudget = document.querySelector("#progress-budget");
+const progressDetails = document.querySelector("#progress-details");
+const cancelCheck = document.querySelector("#cancel-check");
 const authorized = document.querySelector("#authorized");
 const privacy = document.querySelector("#privacy");
 const result = document.querySelector("#result");
@@ -20,6 +25,9 @@ const metrics = document.querySelector("#result-metrics");
 const findings = document.querySelector("#result-findings");
 const download = document.querySelector("#download");
 let lastResponse = null;
+let activeJob = null;
+let progressStream = null;
+let progressPoll = null;
 
 document.querySelector("#year").textContent = new Date().getFullYear();
 
@@ -393,6 +401,115 @@ function setLoading(isLoading) {
   mazeLoader.hidden = !isLoading;
 }
 
+function jobUrl(relative) {
+  return new URL(relative, API_URL).href;
+}
+
+function elapsed(ms) {
+  const seconds = Math.max(0, Math.round((Number(ms) || 0) / 1000));
+  return seconds < 60 ? `${seconds}s` : `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
+}
+
+function phaseLabel(phase) {
+  return ({ compile: "Compiling story", source_scan: "Scanning structure", explore: "Exploring choices", min_repro: "Shortening repro paths", report: "Building report" })[phase] || "Preparing check";
+}
+
+function renderProgress(event, jobStatus) {
+  runProgress.hidden = false;
+  if (jobStatus === "queued") {
+    progressPhase.textContent = "Waiting for an available checker";
+    progressBudget.textContent = "Your upload is queued; the check has not started yet.";
+    progressDetails.textContent = "The page will keep reconnecting while this job remains available.";
+    return;
+  }
+  progressPhase.textContent = phaseLabel(event?.phase);
+  const states = Number(event?.statesExplored) || 0;
+  const budget = Number(event?.stateBudget) || 0;
+  if (event?.phase === "explore" || event?.phase === "min_repro" || event?.type === "progress") {
+    const percent = budget ? Math.floor((states / budget) * 100) : 0;
+    progressBudget.textContent = `${states.toLocaleString()} / ${budget.toLocaleString()} work states (${percent}% of state budget)`;
+    const details = [`${Number(event?.endingsFound || 0).toLocaleString()} endings`, `${Number(event?.runtimeErrorsFound || 0).toLocaleString()} runtime errors`];
+    if (event?.unvisitedKnots !== undefined) details.push(`${Number(event.unvisitedKnots).toLocaleString()} knots unvisited`);
+    details.push(`${elapsed(event?.elapsedMs)} elapsed`);
+    progressDetails.textContent = details.join(" · ");
+  } else {
+    progressBudget.textContent = "Working through the current phase.";
+    progressDetails.textContent = `${elapsed(event?.elapsedMs)} elapsed`;
+  }
+}
+
+function stopJobUpdates() {
+  progressStream?.close();
+  progressStream = null;
+  if (progressPoll) window.clearInterval(progressPoll);
+  progressPoll = null;
+}
+
+function clearJob() {
+  stopJobUpdates();
+  activeJob = null;
+  sessionStorage.removeItem("inkcheck-active-job");
+  runProgress.hidden = true;
+}
+
+async function fetchJob() {
+  if (!activeJob) return null;
+  const response = await fetch(jobUrl(activeJob.statusUrl), { credentials: "omit", cache: "no-store" });
+  if (!response.ok) throw new Error("This check is no longer available. Start another check when you are ready.");
+  return response.json();
+}
+
+async function finishJob(snapshot) {
+  const job = snapshot.job;
+  if (job.status === "complete") {
+    lastResponse = job.result;
+    renderReport(job.result);
+    result.hidden = false;
+    result.scrollIntoView({ behavior: "smooth", block: "start" });
+    result.focus({ preventScroll: true });
+    setStatus(`Check complete in ${(job.result.meta.durationMs / 1000).toFixed(1)} seconds. Uploaded files were deleted after the response.`);
+  } else if (job.status === "cancelled") {
+    setStatus("Check cancelled. Uploaded files were deleted.");
+  } else {
+    setStatus(job.error || "The checker could not finish this request. Uploaded files were deleted.");
+  }
+  clearJob();
+  submit.disabled = false;
+  form.removeAttribute("aria-busy");
+  setLoading(false);
+}
+
+async function refreshJob() {
+  const snapshot = await fetchJob();
+  if (!snapshot) return;
+  const job = snapshot.job;
+  renderProgress(job.progress, job.status);
+  if (["complete", "cancelled", "failed"].includes(job.status)) await finishJob(snapshot);
+}
+
+function startJob(job) {
+  activeJob = job;
+  sessionStorage.setItem("inkcheck-active-job", JSON.stringify(job));
+  renderProgress(null, job.status);
+  setStatus(job.status === "queued" ? "Check queued." : "Starting check…");
+  progressStream = new EventSource(jobUrl(job.eventUrl));
+  progressStream.addEventListener("progress", async (message) => {
+    try {
+      const event = JSON.parse(message.data);
+      renderProgress(event, event.status);
+      if (["complete", "cancelled", "failed"].includes(event.status)) await refreshJob();
+    } catch {
+      // The status poll below is the recovery path for a malformed or dropped event.
+    }
+  });
+  progressStream.onerror = () => {
+    setStatus("Connection interrupted. Reconnecting to your check…");
+    refreshJob().catch(() => {});
+  };
+  progressPoll = window.setInterval(() => refreshJob().catch(() => {}), 5000);
+  refreshJob().catch((error) => finishJob({ job: { status: "failed", error: error.message } }));
+}
+
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   const message = readinessMessage();
@@ -416,10 +533,10 @@ form.addEventListener("submit", async (event) => {
     data.append("authorized", String(authorized.checked));
     data.append("privacyAcknowledged", String(privacy.checked));
 
-    const headers = {};
+    const headers = { "X-Inkcheck-Async": "1" };
     const accessCode = document.querySelector("#access-code")?.value;
     if (accessCode) headers["X-Inkcheck-Access-Code"] = accessCode;
-    setStatus("Compiling the story and exploring branches…");
+    setStatus("Uploading files and creating your check…");
     const response = await fetch(API_URL, { method: "POST", headers, body: data });
     let body;
     try {
@@ -432,12 +549,20 @@ form.addEventListener("submit", async (event) => {
       error.issueUrl = body.issueUrl;
       throw error;
     }
-    lastResponse = body;
-    renderReport(body);
-    result.hidden = false;
-    result.scrollIntoView({ behavior: "smooth", block: "start" });
-    result.focus({ preventScroll: true });
-    setStatus(`Check complete in ${(body.meta.durationMs / 1000).toFixed(1)} seconds. Uploaded files were deleted after the response.`);
+    if (body.job && response.status === 202) {
+      startJob(body.job);
+      return;
+    }
+    if (body.report) {
+      lastResponse = body;
+      renderReport(body);
+      result.hidden = false;
+      result.scrollIntoView({ behavior: "smooth", block: "start" });
+      result.focus({ preventScroll: true });
+      setStatus(`Check complete in ${(body.meta.durationMs / 1000).toFixed(1)} seconds. Uploaded files were deleted after the response.`);
+      return;
+    }
+    throw new Error("The checker did not create a trackable job. Please try again shortly.");
   } catch (error) {
     if (error instanceof TypeError) {
       setStatus("The checker service could not be reached. Please try again later.");
@@ -445,11 +570,40 @@ form.addEventListener("submit", async (event) => {
       setStatus(error.message, error.issueUrl);
     }
   } finally {
-    submit.disabled = false;
-    form.removeAttribute("aria-busy");
-    setLoading(false);
+    if (!activeJob) {
+      submit.disabled = false;
+      form.removeAttribute("aria-busy");
+      setLoading(false);
+    }
   }
 });
+
+cancelCheck.addEventListener("click", async () => {
+  if (!activeJob) return;
+  cancelCheck.disabled = true;
+  setStatus("Cancelling check…");
+  try {
+    await fetch(jobUrl(activeJob.cancelUrl), { method: "POST", credentials: "omit", cache: "no-store" });
+    await refreshJob();
+  } catch {
+    setStatus("Could not cancel this check. It may still be running; the page will keep reconnecting.");
+  } finally {
+    cancelCheck.disabled = false;
+  }
+});
+
+try {
+  const saved = sessionStorage.getItem("inkcheck-active-job");
+  if (saved) {
+    const job = JSON.parse(saved);
+    submit.disabled = true;
+    form.setAttribute("aria-busy", "true");
+    setLoading(true);
+    startJob(job);
+  }
+} catch {
+  sessionStorage.removeItem("inkcheck-active-job");
+}
 
 download.addEventListener("click", () => {
   if (!lastResponse) return;
