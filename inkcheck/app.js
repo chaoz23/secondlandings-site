@@ -444,7 +444,18 @@ function renderProgress(event, jobStatus) {
     progressDetails.textContent = "The page will keep reconnecting while this job remains available.";
     return;
   }
-  progressPhase.textContent = phaseLabel(event?.phase);
+  // Only phase_start/phase_end events carry a `phase`; the frequent `progress`
+  // events do not. Setting the heading from `phase` unconditionally would reset
+  // it to the default ("Preparing check") on every progress tick — and on a
+  // reconnect/poll the only snapshot is a phase-less progress event — so an
+  // active exploration would look stuck. `progress` events are emitted only
+  // during exploration, so treat one as the explore phase; otherwise keep the
+  // heading as the last real phase.
+  if (event?.phase) {
+    progressPhase.textContent = phaseLabel(event.phase);
+  } else if (event?.type === "progress") {
+    progressPhase.textContent = phaseLabel("explore");
+  }
   const states = Number(event?.statesExplored) || 0;
   const budget = Number(event?.stateBudget) || 0;
   if (event?.phase === "explore" || event?.phase === "min_repro" || event?.type === "progress") {
