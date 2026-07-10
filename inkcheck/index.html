@@ -19,8 +19,8 @@
   <meta property="og:image:alt" content="Inkcheck — a free second pair of eyes for stories made with ink" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <link rel="stylesheet" href="inkcheck.css?v=5" />
-  <script src="app.js?v=5" defer></script>
+  <link rel="stylesheet" href="inkcheck.css?v=6" />
+  <script src="app.js?v=6" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#checker">Skip to checker</a>
@@ -37,7 +37,7 @@
         <fieldset class="checker-card">
           <legend><span>1</span> Test your story</legend>
           <p class="field-help"><strong>What it does:</strong> Inkcheck automatically explores your story <code>.ink</code> file logic, tries different choices, and produces a report of broken paths or places it could not reach to help automate quality assurance.</p>
-          <p class="value-note"><strong>Not random sampling.</strong> Inkcheck walks your choices in repeatable patterns, records the path to each problem, and checks that same path again every time you rerun after a fix.</p>
+          <p class="value-note"><strong>Repeatable, bounded coverage.</strong> Inkcheck combines systematic search with seeded sampling, records the path to each problem, and tells you when a run was partial rather than pretending it proved everything.</p>
 
           <label class="file-drop" for="main-file">
             <strong>Choose an .ink file</strong>

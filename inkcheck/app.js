@@ -167,6 +167,22 @@ function countPhrase(count, singular, plural = `${singular}s`) {
   return `${value.toLocaleString()} ${value === 1 ? singular : plural}`;
 }
 
+function coverageState(explore) {
+  if (explore.exhaustive) return "exhaustive";
+  if (explore.truncated) return "partial";
+  return "within limits";
+}
+
+function truncationAdvice(explore) {
+  const causes = explore.truncatedBy || {};
+  const advice = [];
+  if (causes.maxDepth) advice.push(`depth ${explore.limits?.maxDepth ?? "limit"}`);
+  if (causes.maxStates) advice.push(`${(explore.limits?.maxStates ?? "state").toLocaleString?.() || explore.limits?.maxStates || "state"} states`);
+  if (causes.beamWidth) advice.push("beam width");
+  if (!advice.length) return "Coverage stopped at a configured limit.";
+  return `Coverage stopped at the ${advice.join(", ")} limit${advice.length === 1 ? "" : "s"}.`;
+}
+
 const SEVERITY_LABELS = {
   error: "Errors to fix first",
   warning: "Warnings to review",
@@ -214,14 +230,38 @@ function fallbackHumanFindings(report) {
     });
   }
   for (const knot of explore.unvisitedKnots || []) {
+    const orphan = knot.staticOrphanCandidate === true;
+    const inbound = Number.isFinite(knot.inboundDiverts) ? knot.inboundDiverts : null;
     out.push({
       severity: "warning",
       category: "Unvisited content",
       title: `No explored path reached ${knot.name}`,
-      message: `The knot ${knot.name} was not visited by any explored path.`,
+      message: orphan
+        ? `The knot ${knot.name} was not visited, and source scanning found no direct authored divert to it.`
+        : `The knot ${knot.name} was not visited by this run${inbound === null ? "" : `, though ${inbound} direct inbound divert${inbound === 1 ? "" : "s"} exist`}.`,
       file: knot.file,
       line: knot.line,
-      action: "If this scene should be reachable, add or repair a divert/choice that leads here. If it is intentionally unused, mark it for yourself or remove it.",
+      action: orphan
+        ? "If this scene should be reachable, add or repair a divert/choice that leads here. If it is intentionally unused, mark it for yourself or remove it."
+        : "Try a broader run before treating this as dead content; it may be behind depth, state, condition, or host-game limits.",
+    });
+  }
+  if (explore.truncated) {
+    out.push({
+      severity: "note",
+      category: "Coverage limit",
+      title: "This was a partial check",
+      message: truncationAdvice(explore),
+      action: "Raise the named limit or run the local CLI for a deeper offline check when this story needs more coverage.",
+    });
+  }
+  if (explore.exhaustive) {
+    out.push({
+      severity: "note",
+      category: "Coverage limit",
+      title: "Choice traversal completed within the configured limits",
+      message: "A systematic pass visited every reachable state it could see without hitting a configured limit.",
+      action: "Still review host-game behavior and external systems separately if the story depends on them.",
     });
   }
   return out.sort((a, b) => ["error", "warning", "note"].indexOf(a.severity) - ["error", "warning", "note"].indexOf(b.severity));
@@ -307,9 +347,10 @@ function renderReport(body) {
   }
 
   const hasProblems = explore.runtimeErrors.length || explore.unvisitedKnots.length;
+  const coverage = coverageState(explore);
   if (explore.truncated) {
     resultTitle.textContent = hasProblems ? "Partial check found review leads" : "Partial check complete";
-    summary.textContent = `Inkcheck ran and found ${countPhrase(explore.endingsFound.length, "ending")}, ${countPhrase(explore.runtimeErrors.length, "runtime error")}, and ${countPhrase(explore.unvisitedKnots.length, "unvisited knot")}.`;
+    summary.textContent = `Inkcheck ran a partial check and found ${countPhrase(explore.endingsFound.length, "ending")}, ${countPhrase(explore.runtimeErrors.length, "runtime error")}, and ${countPhrase(explore.unvisitedKnots.length, "unvisited knot")}. ${truncationAdvice(explore)}`;
   } else {
     resultTitle.textContent = explore.runtimeErrors.length
       ? "Runtime paths need review"
@@ -318,12 +359,18 @@ function renderReport(body) {
         : "No mechanical issues found";
     summary.textContent = hasProblems
     ? "Inkcheck found areas worth reviewing. These are mechanical signals, not judgments about the story."
-    : "No runtime failures or unreachable knots were found in this check.";
+    : explore.exhaustive
+      ? "No runtime failures or unreachable knots were found, and choice traversal completed within the configured limits."
+      : "No runtime failures or unreachable knots were found in this check.";
   }
   metrics.append(
     metric("words", report.stats?.words ?? "—"),
     metric("choices", report.stats?.choices ?? "—"),
     metric("states explored", explore.statesExplored),
+    metric("depth limit", explore.limits?.maxDepth ?? "—"),
+    metric("state budget", explore.limits?.maxStates ?? "—"),
+    ...(explore.limits?.seed === undefined ? [] : [metric("random seed", explore.limits.seed)]),
+    metric("coverage", coverage),
     metric("endings found", explore.endingsFound.length),
     metric("runtime errors", explore.runtimeErrors.length),
     metric("unvisited knots", explore.unvisitedKnots.length)
