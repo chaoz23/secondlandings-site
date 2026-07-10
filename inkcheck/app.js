@@ -183,12 +183,10 @@ function truncationAdvice(explore) {
   if (causes.memory) {
     return "This story is large enough that the check stopped to stay within the server's memory. The results here are still real as far as they go — for a broader pass, run the local command-line tool below, where you control memory.";
   }
-  const advice = [];
-  if (causes.maxDepth) advice.push(`depth ${explore.limits?.maxDepth ?? "limit"}`);
-  if (causes.maxStates) advice.push(`${(explore.limits?.maxStates ?? "state").toLocaleString?.() || explore.limits?.maxStates || "state"} states`);
-  if (causes.beamWidth) advice.push("beam width");
-  if (!advice.length) return "Coverage stopped at a configured limit.";
-  return `Coverage stopped at the ${advice.join(", ")} limit${advice.length === 1 ? "" : "s"}.`;
+  // Any other stop just means the story is bigger than one hosted run covers.
+  // The metrics show how far it got, so we don't restate that as a limit name
+  // (and never surface internal terms like "beam width" to a reader here).
+  return "";
 }
 
 const SEVERITY_LABELS = {
@@ -259,8 +257,8 @@ function fallbackHumanFindings(report) {
       severity: "note",
       category: "Coverage limit",
       title: "This was a partial check",
-      message: truncationAdvice(explore),
-      action: "Raise the named limit or run the local CLI for a deeper offline check when this story needs more coverage.",
+      message: truncationAdvice(explore) || "This run did not reach every part of the story. The metrics above show how far it got.",
+      action: "Run the local command-line tool for a deeper offline check if this story needs more coverage.",
     });
   }
   if (explore.exhaustive) {
@@ -356,20 +354,26 @@ function renderReport(body) {
 
   const hasProblems = explore.runtimeErrors.length || explore.unvisitedKnots.length;
   const coverage = coverageState(explore);
-  if (explore.truncated) {
-    resultTitle.textContent = hasProblems ? "Partial check found review leads" : "Partial check complete";
-    summary.textContent = `Inkcheck ran a partial check and found ${countPhrase(explore.endingsFound.length, "ending")}, ${countPhrase(explore.runtimeErrors.length, "runtime error")}, and ${countPhrase(explore.unvisitedKnots.length, "unvisited knot")}. ${truncationAdvice(explore)}`;
-  } else {
-    resultTitle.textContent = explore.runtimeErrors.length
-      ? "Runtime paths need review"
-      : explore.unvisitedKnots.length
-        ? "Reachability review needed"
+  // Title by what was found, not by whether the run was "partial" — there is
+  // no "complete" mode for a non-trivial story, so a partial/complete title
+  // would imply a choice that does not exist. Coverage is shown by the badge
+  // and the coverage note instead.
+  resultTitle.textContent = explore.runtimeErrors.length
+    ? "Runtime paths need review"
+    : explore.unvisitedKnots.length
+      ? "Reachability review needed"
+      : explore.truncated
+        ? "No issues found in the paths checked"
         : "No mechanical issues found";
+  if (explore.truncated) {
+    const advice = truncationAdvice(explore);
+    summary.textContent = `Inkcheck checked what this run could reach and found ${countPhrase(explore.endingsFound.length, "ending")}, ${countPhrase(explore.runtimeErrors.length, "runtime error")}, and ${countPhrase(explore.unvisitedKnots.length, "unvisited knot")}.${advice ? " " + advice : ""}`;
+  } else {
     summary.textContent = hasProblems
-    ? "Inkcheck found areas worth reviewing. These are mechanical signals, not judgments about the story."
-    : explore.exhaustive
-      ? "No runtime failures or unreachable knots were found, and choice traversal completed within the configured limits."
-      : "No runtime failures or unreachable knots were found in this check.";
+      ? "Inkcheck found areas worth reviewing. These are mechanical signals, not judgments about the story."
+      : explore.exhaustive
+        ? "No runtime failures or unreachable knots were found, and choice traversal completed within the configured limits."
+        : "No runtime failures or unreachable knots were found in this check.";
   }
   metrics.append(
     metric("words", report.stats?.words ?? "—"),
