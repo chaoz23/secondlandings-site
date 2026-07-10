@@ -17,8 +17,7 @@ const progressBudget = document.querySelector("#progress-budget");
 const progressDetails = document.querySelector("#progress-details");
 const progressTrust = document.querySelector("#progress-trust");
 const cancelCheck = document.querySelector("#cancel-check");
-const authorized = document.querySelector("#authorized");
-const privacy = document.querySelector("#privacy");
+const consent = document.querySelector("#consent");
 const result = document.querySelector("#result");
 const resultTitle = document.querySelector("#result-title");
 const summary = document.querySelector("#result-summary");
@@ -150,14 +149,8 @@ function readinessMessage() {
   if (!folderEntries().length && !mainFileInput.files.length) {
     return "Choose an .ink file first.";
   }
-  if (!authorized.checked && !privacy.checked) {
-    return "Check the two confirmation boxes, then run Inkcheck.";
-  }
-  if (!authorized.checked) {
-    return "Check the authorization box, then run Inkcheck.";
-  }
-  if (!privacy.checked) {
-    return "Check the temporary-upload box, then run Inkcheck.";
+  if (!consent.checked) {
+    return "Check the confirmation box, then run Inkcheck.";
   }
   return "";
 }
@@ -567,8 +560,9 @@ form.addEventListener("submit", async (event) => {
   try {
     const data = new FormData();
     addStoryParts(data);
-    data.append("authorized", String(authorized.checked));
-    data.append("privacyAcknowledged", String(privacy.checked));
+    // One checkbox affirms both facts; the API still expects both fields.
+    data.append("authorized", String(consent.checked));
+    data.append("privacyAcknowledged", String(consent.checked));
 
     const headers = { "X-Inkcheck-Async": "1" };
     const accessCode = document.querySelector("#access-code")?.value;
