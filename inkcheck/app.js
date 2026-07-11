@@ -375,11 +375,18 @@ function renderReport(body) {
         ? "No runtime failures or unreachable knots were found, and choice traversal completed within the configured limits."
         : "No runtime failures or unreachable knots were found in this check.";
   }
+  // Show how deep exploration actually went, not just the configured cap: the
+  // depth limit alone says nothing about the story, and a limit far above the
+  // deepest reached path (e.g. 100 vs 65) reads as misleadingly large. Max over
+  // the per-pass telemetry; fall back to the limit if telemetry is absent.
+  const deepestReached = Array.isArray(explore.passes) && explore.passes.length
+    ? Math.max(0, ...explore.passes.map((pass) => pass.maxDepthReached ?? 0))
+    : undefined;
   metrics.append(
     metric("words", report.stats?.words ?? "—"),
     metric("choices", report.stats?.choices ?? "—"),
     metric("states explored", explore.statesExplored),
-    metric("depth limit", explore.limits?.maxDepth ?? "—"),
+    metric("max depth reached", deepestReached ?? explore.limits?.maxDepth ?? "—"),
     metric("state budget", explore.limits?.maxStates ?? "—"),
     ...(explore.limits?.seed === undefined ? [] : [metric("random seed", explore.limits.seed)]),
     metric("coverage", coverage),
