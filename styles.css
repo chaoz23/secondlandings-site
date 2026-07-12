@@ -343,7 +343,7 @@ main { display: block; }
 .section-label.centered { text-align: center; }
 
 /* Project pages: plantings register */
-.plant-groups { max-width: var(--maxw); margin: 30px auto 0; padding: 0 28px; }
+.plant-groups { max-width: var(--maxw); margin: 30px auto 96px; padding: 0 28px; }
 .plant-group + .plant-group { margin-top: 34px; }
 .plant-group-label {
   font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
