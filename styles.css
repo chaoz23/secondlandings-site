@@ -319,6 +319,26 @@ main { display: block; }
 .catalog-head .section-label { margin-bottom: 16px; }
 .catalog-head .filters { justify-content: center; }
 
+/* Project pages: hero photograph presented as a framed gallery plate */
+.plate {
+  max-width: 620px;
+  margin: 54px auto 88px;
+  padding: 0 28px;
+}
+.plate img {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--line-soft);
+}
+.plate figcaption {
+  margin-top: 14px;
+  text-align: center;
+  font-size: 10.5px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 /* Backpages intro note + footer links */
 .backpages-note {
   margin: 18px auto 0; max-width: 460px;
