@@ -342,6 +342,36 @@ main { display: block; }
 /* Project pages: centered section label (galleries, feature blocks) */
 .section-label.centered { text-align: center; }
 
+/* Project pages: credits ledger (role · name) */
+.credits { display: flex; flex-direction: column; margin-top: 4px; }
+.credit-row {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 24px; padding: 16px 2px;
+  border-top: 1px solid var(--line-soft);
+}
+.credits .credit-row:last-child { border-bottom: 1px solid var(--line-soft); }
+.credit-role {
+  font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--muted); flex: none;
+}
+.credit-name {
+  font-family: var(--serif); font-size: 18px; color: var(--ink);
+  letter-spacing: .2px; text-align: right;
+}
+.credit-name a {
+  color: var(--ink); text-decoration: none;
+  border-bottom: 1px solid var(--line-soft); transition: border-color .3s ease;
+}
+.credit-name a:hover { border-color: var(--gold); }
+
+/* Project pages: visiting / availability note */
+.avail-note {
+  text-align: center;
+  font-family: var(--serif); font-style: italic;
+  font-size: 19px; color: var(--ink-soft);
+  margin: 0 auto; max-width: 460px; line-height: 1.4;
+}
+
 /* Project pages: small photo gallery */
 .gallery {
   max-width: var(--maxw);
@@ -378,8 +408,8 @@ main { display: block; }
   margin: 18px auto 0; max-width: 460px;
   font-size: 14px; line-height: 1.6; color: var(--muted);
 }
-.backpages-note a, .foot a {
+.backpages-note a, .foot a, .prose a {
   color: var(--gold); text-decoration: none;
   border-bottom: 1px solid transparent; transition: border-color .3s ease;
 }
-.backpages-note a:hover, .foot a:hover { border-color: var(--gold); }
+.backpages-note a:hover, .foot a:hover, .prose a:hover { border-color: var(--gold); }
