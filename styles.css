@@ -342,6 +342,22 @@ main { display: block; }
 /* Project pages: centered section label (galleries, feature blocks) */
 .section-label.centered { text-align: center; }
 
+/* Project pages: plantings register */
+.plant-groups { max-width: var(--maxw); margin: 30px auto 0; padding: 0 28px; }
+.plant-group + .plant-group { margin-top: 34px; }
+.plant-group-label {
+  font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
+  color: var(--gold); margin: 0 0 2px;
+}
+.plant-grid { display: grid; grid-template-columns: 1fr; }
+@media (min-width: 640px) {
+  .plant-grid { grid-template-columns: 1fr 1fr; column-gap: 44px; }
+}
+.plant { padding: 13px 2px; border-top: 1px solid var(--line-soft); }
+.plant-name { font-family: var(--serif); font-size: 18px; color: var(--ink); letter-spacing: .2px; }
+.plant-latin { font-family: var(--serif); font-style: italic; font-size: 14px; color: var(--muted); margin-left: 7px; }
+.plant-note { display: block; font-size: 12.5px; color: var(--muted); margin-top: 3px; line-height: 1.45; }
+
 /* Project pages: credits ledger (role · name) */
 .credits { display: flex; flex-direction: column; margin-top: 4px; }
 .credit-row {
