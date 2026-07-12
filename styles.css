@@ -339,6 +339,40 @@ main { display: block; }
   color: var(--muted);
 }
 
+/* Project pages: centered section label (galleries, feature blocks) */
+.section-label.centered { text-align: center; }
+
+/* Project pages: small photo gallery */
+.gallery {
+  max-width: var(--maxw);
+  margin: 34px auto 96px;
+  padding: 0 28px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+@media (min-width: 640px) {
+  .gallery { grid-template-columns: repeat(3, 1fr); }
+}
+.gallery figure { margin: 0; }
+.gallery img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border: 1px solid var(--line-soft);
+}
+.gallery .wide { grid-column: 1 / -1; }
+.gallery .wide img { aspect-ratio: 16 / 9; }
+.gallery figcaption {
+  margin-top: 11px;
+  text-align: center;
+  font-size: 10.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 /* Backpages intro note + footer links */
 .backpages-note {
   margin: 18px auto 0; max-width: 460px;
