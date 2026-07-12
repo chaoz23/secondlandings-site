@@ -386,7 +386,7 @@ function renderReport(body) {
     metric("words", report.stats?.words ?? "—"),
     metric("choices", report.stats?.choices ?? "—"),
     metric("states explored", explore.statesExplored),
-    metric("max depth reached", deepestReached ?? explore.limits?.maxDepth ?? "—"),
+    metric("deepest path", deepestReached ?? explore.limits?.maxDepth ?? "—"),
     metric("state budget", explore.limits?.maxStates ?? "—"),
     ...(explore.limits?.seed === undefined ? [] : [metric("random seed", explore.limits.seed)]),
     metric("coverage", coverage),
