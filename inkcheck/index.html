@@ -78,6 +78,12 @@
           <p class="upload-disclaimer">Uploaded files are temporarily read then deleted after your test runs complete. Files remain your IP, are never used for training and are never shared with third parties or used for secondary purposes.</p>
         </fieldset>
 
+        <fieldset class="run-intent">
+          <legend>When would you like the report?</legend>
+          <label><input type="radio" name="run-intent" value="quick" /><span><strong>Quick</strong><small>Earlier review, up to 250,000 states</small></span></label>
+          <label><input type="radio" name="run-intent" value="balanced" checked /><span><strong>Balanced</strong><small>Deeper review, up to 1,000,000 states</small></span></label>
+        </fieldset>
+
         <button class="run-button" id="submit" type="submit"><span>Run Inkcheck</span><span aria-hidden="true">→</span></button>
         <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
         <section id="run-progress" class="run-progress" hidden aria-live="polite" aria-label="Check progress">

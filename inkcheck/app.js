@@ -384,6 +384,12 @@ function renderReport(body) {
     metric("unvisited knots", explore.unvisitedKnots.length)
   );
   renderHumanFindings(humanFindings);
+  if (body.resultWindow) {
+    const resultKind = body.resultWindow.uncertainty === "exhaustive"
+      ? "This result window is exhaustive for the configured run."
+      : "This is a bounded partial result; more search may still find different paths.";
+    summary.textContent = `${summary.textContent} ${resultKind}`;
+  }
 }
 
 function setStatus(message, issueUrl) {
@@ -425,7 +431,7 @@ function renderProgress(event, jobStatus) {
     progressPhase.textContent = "Check cancelled";
     progressBudget.textContent = "The checker stopped this run.";
     progressDetails.textContent = "Uploaded files were deleted after cancellation.";
-    progressTrust.textContent = "No report was kept for this cancelled hosted check.";
+    progressTrust.textContent = "The final progress window remains visible, but no story report was kept for this cancelled hosted check.";
     return;
   }
   if (cancelRequested || jobStatus === "cancelling") {
@@ -448,8 +454,17 @@ function renderProgress(event, jobStatus) {
     progressBudget.textContent = `${states.toLocaleString()} / ${budget.toLocaleString()} work states (${percent}% of state budget)`;
     const details = [`${Number(event?.endingsFound || 0).toLocaleString()} endings`, `${Number(event?.runtimeErrorsFound || 0).toLocaleString()} runtime errors`];
     if (event?.unvisitedKnots !== undefined) details.push(`${Number(event.unvisitedKnots).toLocaleString()} knots unvisited`);
+    if (event?.meaningfulYield !== undefined) details.push(`${Number(event.meaningfulYield).toLocaleString()} discoveries so far`);
     details.push(`${elapsed(event?.elapsedMs)} elapsed`);
     progressDetails.textContent = details.join(" · ");
+    if (event?.forecast) {
+      const pace = event.forecast.status === "active"
+        ? "New discoveries are still arriving."
+        : event.forecast.status === "quiet"
+          ? "Discoveries have slowed in this window."
+          : "Inkcheck is still learning this story's discovery pace.";
+      progressTrust.textContent = `${pace} Forecast uncertainty is ${event.forecast.uncertainty}; this is not a coverage estimate. Uploaded files are still deleted when the run ends.`;
+    }
   } else {
     progressBudget.textContent = "Working through the current phase.";
     progressDetails.textContent = `${elapsed(event?.elapsedMs)} elapsed`;
@@ -496,7 +511,11 @@ async function finishJob(snapshot) {
     setStatus(`Check complete in ${(job.result.meta.durationMs / 1000).toFixed(1)} seconds. Uploaded files were deleted after the response.`);
   } else if (job.status === "cancelled") {
     renderProgress(job.progress, "cancelled");
-    setStatus("Check cancelled. Uploaded files were deleted after cancellation.");
+    if (job.resultWindow) {
+      progressBudget.textContent = `${job.resultWindow.work.statesExplored.toLocaleString()} work states completed before cancellation.`;
+      progressDetails.textContent = `${job.resultWindow.yield.endings.toLocaleString()} endings · ${job.resultWindow.yield.runtimeErrors.toLocaleString()} runtime errors observed before stopping`;
+    }
+    setStatus("Check cancelled. The final progress window is shown and uploaded files were deleted.");
     stopActiveJobUpdates();
   } else {
     setStatus(job.error || "The checker could not finish this request. Uploaded files were deleted.");
@@ -560,6 +579,7 @@ form.addEventListener("submit", async (event) => {
   try {
     const data = new FormData();
     addStoryParts(data);
+    data.append("runIntent", form.elements["run-intent"].value);
     // One checkbox affirms both facts; the API still expects both fields.
     data.append("authorized", String(consent.checked));
     data.append("privacyAcknowledged", String(consent.checked));

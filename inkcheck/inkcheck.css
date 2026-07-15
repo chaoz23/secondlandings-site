@@ -249,6 +249,13 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
 .check-row { display: flex; gap: 12px; align-items: flex-start; margin: 16px 0; color: var(--ink-soft); font-size: 15px; }
 .check-row input { width: 19px; height: 19px; margin-top: 2px; flex: 0 0 auto; accent-color: var(--forest); }
 .upload-disclaimer { margin: 18px 0 0; padding-top: 16px; border-top: 2px dotted var(--line); color: var(--muted); font-size: 14px; }
+.run-intent { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin: 0; padding: 0; border: 0; }
+.run-intent legend { width: 100%; margin-bottom: 9px; color: var(--ink); font: 650 18px var(--serif); }
+.run-intent label { display: flex; min-width: 0; gap: 10px; align-items: flex-start; margin: 0; padding: 13px 14px; border: 2px solid var(--line); border-radius: 6px; background: var(--paper-deep); cursor: pointer; }
+.run-intent label:has(input:checked) { border-color: var(--forest); background: var(--forest-soft); }
+.run-intent input { width: 18px; height: 18px; margin: 2px 0 0; flex: 0 0 auto; accent-color: var(--forest); }
+.run-intent span, .run-intent small { display: block; min-width: 0; }
+.run-intent small { margin-top: 3px; color: var(--muted); font-size: 13px; line-height: 1.35; }
 .advanced-options { padding-top: 18px; border-top: 2px dotted var(--line); }
 .run-button, .quiet-button {
   display: inline-flex;
@@ -368,6 +375,7 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
   .checker-card { padding: 24px 18px; }
   .limitations { padding: 22px 20px; }
   .file-options { grid-template-columns: 1fr; }
+  .run-intent { grid-template-columns: 1fr; }
   .report-heading { display: block; }
   .quiet-button { margin-top: 15px; }
   .report-metrics { grid-template-columns: 1fr 1fr; }
