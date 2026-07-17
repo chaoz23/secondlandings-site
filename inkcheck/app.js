@@ -18,6 +18,18 @@ const progressDetails = document.querySelector("#progress-details");
 const progressTrust = document.querySelector("#progress-trust");
 const cancelCheck = document.querySelector("#cancel-check");
 const consent = document.querySelector("#consent");
+const storyRule = document.querySelector("#story-rule");
+const ruleEnabled = document.querySelector("#rule-enabled");
+const ruleFields = document.querySelector("#rule-fields");
+const ruleLeft = document.querySelector("#rule-left");
+const ruleOperator = document.querySelector("#rule-operator");
+const ruleRightKind = document.querySelector("#rule-right-kind");
+const ruleRightLabel = document.querySelector("#rule-right-label");
+const ruleRight = document.querySelector("#rule-right");
+const ruleWhen = document.querySelector("#rule-when");
+const rulePreview = document.querySelector("#rule-preview");
+const ruleConfig = document.querySelector("#rule-config");
+const storyVariables = document.querySelector("#story-variables");
 const result = document.querySelector("#result");
 const resultTitle = document.querySelector("#result-title");
 const summary = document.querySelector("#result-summary");
@@ -29,6 +41,7 @@ let activeJob = null;
 let progressStream = null;
 let progressPoll = null;
 let cancelRequested = false;
+let selectedEntries = [];
 
 document.querySelector("#year").textContent = new Date().getFullYear();
 
@@ -75,9 +88,19 @@ function individualEntries() {
   return entries;
 }
 
+async function refreshDetectedVariables(entries) {
+  const texts = await Promise.all(entries.map(({ file }) => file.text()));
+  const names = [...new Set(texts.flatMap((text) =>
+    [...text.matchAll(/^\s*VAR\s+([A-Za-z_][A-Za-z0-9_]*)\b/gm)].map((match) => match[1])
+  ))].sort((a, b) => a.localeCompare(b));
+  storyVariables.replaceChildren(...names.map((name) => new Option(name, name)));
+}
+
 function refreshSelection() {
   const folder = folderEntries();
   rootSelect.replaceChildren();
+  selectedEntries = folder.length ? folder : individualEntries();
+  refreshDetectedVariables(selectedEntries).catch(() => storyVariables.replaceChildren());
   if (folder.length) {
     for (const entry of folder) rootSelect.add(new Option(entry.name, entry.name));
     const likelyRoot = folder.find((entry) => /(^|\/)(main|story)\.ink$/i.test(entry.name));
@@ -97,6 +120,54 @@ function refreshSelection() {
     rootSelect.add(new Option("story.ink", "story.ink"));
     selectionNote.textContent = "Choose one .ink file.";
   }
+}
+
+function currentRule() {
+  if (!ruleEnabled.checked) return undefined;
+  const left = ruleLeft.value.trim();
+  const right = ruleRight.value.trim();
+  if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(left)) throw new Error("Enter an Ink variable name for your story rule.");
+  let operand;
+  if (ruleRightKind.value === "variable") {
+    if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(right)) throw new Error("Enter an Ink variable name to compare against.");
+    operand = { variable: right };
+  } else {
+    if (right === "" || !Number.isFinite(Number(right))) throw new Error("Enter a finite number for your story rule.");
+    operand = { literal: Number(right) };
+  }
+  return {
+    id: "hosted-rule-1",
+    description: `${left} ${ruleOperator.value} ${ruleRightKind.value === "variable" ? right : Number(right)}`,
+    when: ruleWhen.value,
+    condition: { left: { variable: left }, operator: ruleOperator.value, right: operand },
+  };
+}
+
+function refreshRulePreview() {
+  const enabled = ruleEnabled.checked;
+  ruleFields.hidden = !enabled;
+  rulePreview.hidden = !enabled;
+  ruleConfig.hidden = !enabled;
+  const variable = ruleRightKind.value === "variable";
+  ruleRight.type = variable ? "text" : "number";
+  ruleRight.inputMode = variable ? "text" : "decimal";
+  ruleRight.placeholder = variable ? "max_gold" : "0";
+  ruleRightLabel.childNodes[0].textContent = variable ? "Variable" : "Number";
+  if (!enabled) return;
+  try {
+    const rule = currentRule();
+    const scope = rule.when === "terminal" ? "when a path ends" : "at every visited state";
+    rulePreview.replaceChildren(Object.assign(document.createElement("strong"), { textContent: "Your rule: " }), document.createTextNode(`${rule.description}, checked ${scope}.`));
+    ruleConfig.textContent = `assertions:\n  - id: ${rule.id}\n    when: ${rule.when}\n    condition: ${JSON.stringify(rule.condition)}`;
+  } catch (error) {
+    rulePreview.textContent = error.message;
+    ruleConfig.textContent = "Complete the rule to preview its safe configuration.";
+  }
+}
+
+for (const control of [ruleEnabled, ruleLeft, ruleOperator, ruleRightKind, ruleRight, ruleWhen]) {
+  control.addEventListener("input", refreshRulePreview);
+  control.addEventListener("change", refreshRulePreview);
 }
 
 mainFileInput.addEventListener("change", () => {
@@ -119,6 +190,9 @@ clearSelection.addEventListener("click", () => {
   includeFilesInput.value = "";
   folderInput.value = "";
   document.querySelector("#include-options").open = false;
+  storyRule.open = false;
+  ruleEnabled.checked = false;
+  refreshRulePreview();
   result.hidden = true;
   status.textContent = "";
   refreshSelection();
@@ -152,6 +226,7 @@ function readinessMessage() {
   if (!consent.checked) {
     return "Check the confirmation box, then run Inkcheck.";
   }
+  try { currentRule(); } catch (error) { return error.message; }
   return "";
 }
 
@@ -352,7 +427,8 @@ function renderReport(body) {
     return;
   }
 
-  const hasProblems = explore.runtimeErrors.length || explore.unvisitedKnots.length;
+  const assertionViolations = (explore.assertionResults || []).filter((item) => item.status === "violated");
+  const hasProblems = explore.runtimeErrors.length || explore.unvisitedKnots.length || assertionViolations.length;
   const coverage = coverageState(explore);
   // Title by what was found, not by whether the run was "partial" — there is
   // no "complete" mode for a non-trivial story, so a partial/complete title
@@ -360,6 +436,8 @@ function renderReport(body) {
   // and the coverage note instead.
   resultTitle.textContent = explore.runtimeErrors.length
     ? "Runtime paths need review"
+    : assertionViolations.length
+      ? "Story rule needs review"
     : explore.unvisitedKnots.length
       ? "Reachability review needed"
       : explore.truncated
@@ -392,6 +470,7 @@ function renderReport(body) {
     metric("coverage", coverage),
     metric("endings found", explore.endingsFound.length),
     metric("runtime errors", explore.runtimeErrors.length),
+    ...(explore.assertionResults?.length ? [metric("story rules failed", assertionViolations.length)] : []),
     metric("unvisited knots", explore.unvisitedKnots.length)
   );
   renderHumanFindings(humanFindings);
@@ -602,6 +681,8 @@ form.addEventListener("submit", async (event) => {
     const data = new FormData();
     addStoryParts(data);
     data.append("runIntent", form.elements["run-intent"].value);
+    const rule = currentRule();
+    if (rule) data.append("assertions", JSON.stringify([rule]));
     // One checkbox affirms both facts; the API still expects both fields.
     data.append("authorized", String(consent.checked));
     data.append("privacyAcknowledged", String(consent.checked));

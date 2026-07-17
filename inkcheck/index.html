@@ -19,15 +19,15 @@
   <meta property="og:image:alt" content="Inkcheck — a free second pair of eyes for stories made with ink" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <link rel="stylesheet" href="inkcheck.css?v=12" />
-  <script src="app.js?v=11" defer></script>
+  <link rel="stylesheet" href="inkcheck.css?v=13" />
+  <script src="app.js?v=12" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#checker">Skip to checker</a>
   <main>
     <header class="hero section inkcheck-hero">
       <a class="home-link" href="/">Second Landings <span aria-hidden="true">/</span> Tools</a>
-      <p class="eyebrow">Inkcheck 0.6 · A free community tool</p>
+      <p class="eyebrow">Inkcheck 0.7 · A free community tool</p>
       <h1>Inkcheck</h1>
       <p class="hero-intro">Open-source mechanical QA for stories made with <a href="https://www.inklestudios.com/ink">ink</a>: bounded, repeatable checks with exact paths to problems. Inkcheck does not use AI to read, test, or rewrite your story.</p>
     </header>
@@ -70,6 +70,45 @@
             <p id="selection-note" class="selection-note">Choose one .ink file.</p>
             <button id="clear-selection" class="text-button" type="button">Clear selection</button>
           </div>
+
+          <details id="story-rule" class="story-rule">
+            <summary>Add an optional story rule</summary>
+            <p class="field-help">Check a rule you define while Inkcheck follows the ordinary bounded paths. It does not use AI or add hidden search budget.</p>
+            <label class="check-row rule-enable"><input id="rule-enabled" type="checkbox" /><span>Check this rule during my test</span></label>
+            <div id="rule-fields" class="rule-fields" hidden>
+              <label>Variable to check
+                <input id="rule-left" type="text" list="story-variables" inputmode="text" autocomplete="off" placeholder="gold" />
+              </label>
+              <label>Must be
+                <select id="rule-operator">
+                  <option value=">=">at least</option>
+                  <option value=">">greater than</option>
+                  <option value="<=">at most</option>
+                  <option value="<">less than</option>
+                  <option value="==">equal to</option>
+                  <option value="!=">not equal to</option>
+                </select>
+              </label>
+              <label>Compare with
+                <select id="rule-right-kind">
+                  <option value="literal">a number</option>
+                  <option value="variable">another variable</option>
+                </select>
+              </label>
+              <label id="rule-right-label">Number
+                <input id="rule-right" type="number" step="any" inputmode="decimal" placeholder="0" />
+              </label>
+              <label>Check
+                <select id="rule-when">
+                  <option value="always">at every visited state</option>
+                  <option value="terminal">when a path ends</option>
+                </select>
+              </label>
+            </div>
+            <p id="rule-preview" class="rule-preview" hidden></p>
+            <pre id="rule-config" class="rule-config" hidden></pre>
+            <datalist id="story-variables"></datalist>
+          </details>
         </fieldset>
 
         <fieldset class="checker-card">
@@ -142,7 +181,7 @@
 
     <aside id="local-mode" class="section mode-card" aria-label="Run locally">
       <div>
-        <p>Need a power-user offline solution? Inkcheck 0.6 can also run locally from <a href="https://www.npmjs.com/package/inkcheck">npm</a> with this command:</p>
+        <p>Need a power-user offline solution? Inkcheck 0.7 can also run locally from <a href="https://www.npmjs.com/package/inkcheck">npm</a> with this command:</p>
       </div>
       <code>npx -y inkcheck path/to/story.ink</code>
       <p class="small-note">This hosted checker explores up to 1,000,000 story states per run and marks the report partial when it stops there. The local tool defaults to 10,000,000 states, supports a ceiling of 100,000,000, streams progress, and adds durable campaigns for longer human or agent workflows. Agents can drive the same mechanical checks through MCP; Inkcheck itself still does not use AI.</p>

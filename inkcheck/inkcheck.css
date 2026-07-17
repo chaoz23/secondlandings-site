@@ -233,6 +233,16 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
   margin-top: 16px;
 }
 .selection-note { margin: 0; color: var(--muted); font-size: 13px; }
+.story-rule { margin-top: 22px; padding-top: 18px; border-top: 2px dotted var(--line); }
+.story-rule summary { cursor: pointer; color: var(--forest); font: 650 18px var(--serif); }
+.story-rule > .field-help { margin: 12px 0; }
+.rule-enable { margin: 0 0 12px; }
+.rule-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.rule-fields label { display: grid; gap: 5px; color: var(--ink-soft); font-size: 13px; font-weight: 700; }
+.rule-fields input, .rule-fields select { width: 100%; min-width: 0; padding: 9px 10px; border: 1px solid var(--line); border-radius: 5px; color: var(--ink); background: var(--paper-deep); font: inherit; }
+.rule-preview { margin: 15px 0 0; color: var(--ink-soft); font-size: 14px; }
+.rule-preview strong { color: var(--ink); }
+.rule-config { margin: 9px 0 0; padding: 10px; overflow-x: auto; border: 1px solid var(--line-soft); border-radius: 5px; background: var(--paper-deep); color: var(--ink-soft); font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; }
 .text-button {
   appearance: none;
   border: 0;
@@ -377,6 +387,7 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
   .limitations { padding: 22px 20px; }
   .file-options { grid-template-columns: 1fr; }
   .run-intent { grid-template-columns: 1fr; }
+  .rule-fields { grid-template-columns: 1fr; }
   .report-heading { display: block; }
   .quiet-button { margin-top: 15px; }
   .report-metrics { grid-template-columns: 1fr 1fr; }
