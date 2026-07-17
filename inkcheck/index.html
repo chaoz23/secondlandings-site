@@ -6,11 +6,11 @@
   <title>Inkcheck · Second Landings</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-  <meta name="description" content="A free, open-source second pair of eyes for interactive stories written with ink." />
+  <meta name="description" content="Free, open-source mechanical QA for interactive stories written with ink. Bounded, repeatable checks with no AI." />
   <meta name="inkcheck-api" content="https://inkcheck-api.secondlandings.com/api/check" />
 
   <meta property="og:title" content="Inkcheck · Second Landings" />
-  <meta property="og:description" content="A free second pair of eyes for interactive stories written with ink." />
+  <meta property="og:description" content="Free mechanical QA for stories written with ink: bounded, repeatable checks with no AI." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://secondlandings.com/inkcheck/" />
   <meta property="og:image" content="https://secondlandings.com/inkcheck/share-card.png" />
@@ -19,7 +19,7 @@
   <meta property="og:image:alt" content="Inkcheck — a free second pair of eyes for stories made with ink" />
   <meta name="twitter:card" content="summary_large_image" />
 
-  <link rel="stylesheet" href="inkcheck.css?v=11" />
+  <link rel="stylesheet" href="inkcheck.css?v=12" />
   <script src="app.js?v=11" defer></script>
 </head>
 <body>
@@ -27,9 +27,9 @@
   <main>
     <header class="hero section inkcheck-hero">
       <a class="home-link" href="/">Second Landings <span aria-hidden="true">/</span> Tools</a>
-      <p class="eyebrow">A free community tool for people writing with ink</p>
+      <p class="eyebrow">Inkcheck 0.6 · A free community tool</p>
       <h1>Inkcheck</h1>
-      <p class="hero-intro">An independent, open-source second pair of eyes for stories made with <a href="https://www.inklestudios.com/ink">ink</a>, inkle’s language for interactive narrative.</p>
+      <p class="hero-intro">Open-source mechanical QA for stories made with <a href="https://www.inklestudios.com/ink">ink</a>: bounded, repeatable checks with exact paths to problems. Inkcheck does not use AI to read, test, or rewrite your story.</p>
     </header>
 
     <section id="checker" class="section checker-shell" aria-label="Inkcheck hosted checker" tabindex="-1">
@@ -37,7 +37,7 @@
         <fieldset class="checker-card">
           <legend><span>1</span> Test your story</legend>
           <p class="field-help"><strong>What it does:</strong> Inkcheck automatically explores your story <code>.ink</code> file logic, tries different choices, and produces a report of broken paths or places it could not reach to help automate quality assurance.</p>
-          <p class="value-note"><strong>Repeatable, bounded coverage.</strong> Inkcheck combines systematic search with seeded sampling, records the path to each problem, and tells you when a run was partial rather than pretending it proved everything.</p>
+          <p class="value-note"><strong>Coverage you can trust.</strong> Inkcheck combines systematic search with seeded sampling, records the exact path to each problem, streams real work progress, and labels partial results. A quiet run is never presented as proof that it checked everything.</p>
 
           <label class="file-drop" for="main-file">
             <strong>Choose an .ink file</strong>
@@ -142,10 +142,10 @@
 
     <aside id="local-mode" class="section mode-card" aria-label="Run locally">
       <div>
-        <p>Need a power-user offline solution? Inkcheck can also run locally from <a href="https://www.npmjs.com/package/inkcheck">npm</a> with this command:</p>
+        <p>Need a power-user offline solution? Inkcheck 0.6 can also run locally from <a href="https://www.npmjs.com/package/inkcheck">npm</a> with this command:</p>
       </div>
       <code>npx -y inkcheck path/to/story.ink</code>
-      <p class="small-note">This checker explores up to 1,000,000 story states per run and marks the report partial when it stops there. A story doesn't have to be long to exceed that — branching and variables can create many more reachable states than there are choices. For a broader pass, the local command-line tool explores up to 100,000,000 states, lets you set a memory limit, and streams progress as it runs.</p>
+      <p class="small-note">This hosted checker explores up to 1,000,000 story states per run and marks the report partial when it stops there. The local tool defaults to 10,000,000 states, supports a ceiling of 100,000,000, streams progress, and adds durable campaigns for longer human or agent workflows. Agents can drive the same mechanical checks through MCP; Inkcheck itself still does not use AI.</p>
     </aside>
 
     <footer class="foot section">
