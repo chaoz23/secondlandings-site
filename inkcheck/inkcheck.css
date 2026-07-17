@@ -209,9 +209,9 @@ code {
 .file-drop:hover { background: color-mix(in srgb, var(--trail) 10%, var(--paper)); transform: translateY(-2px); }
 .file-drop strong { font: 650 19px var(--serif); }
 .file-drop span { color: var(--muted); font-size: 13px; }
-.file-drop input { max-width: 100%; margin: 13px auto 0; color: var(--ink-soft); font: 14px var(--sans); }
+.file-drop input { width: 100%; min-width: 0; max-width: 100%; margin: 13px auto 0; color: var(--ink-soft); font: 14px var(--sans); }
 .file-drop.compact { padding: 18px; }
-.file-options { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.file-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .checker-card label:not(.file-drop):not(.check-row) { display: grid; gap: 8px; color: var(--ink-soft); font-size: 14px; font-weight: 700; }
 select, input[type="number"], input[type="password"] {
   width: 100%;
@@ -278,6 +278,7 @@ summary { color: var(--forest); cursor: pointer; font-weight: 700; }
 .run-button:disabled { opacity: .55; cursor: wait; }
 .form-status { min-height: 1.65em; margin: -7px 0 0; color: var(--ink-soft); text-align: center; font-size: 15px; }
 .run-progress { display: grid; gap: 5px; margin: 2px auto 0; max-width: 600px; padding: 15px 18px; border: 2px solid var(--ink); border-radius: 6px; background: var(--paper-deep); text-align: center; }
+.run-progress[hidden] { display: none; }
 .run-progress[data-state="cancelled"] { border-color: var(--forest); background: var(--forest-soft); }
 .progress-phase { margin: 0; font: 650 19px var(--serif); }
 .progress-budget, .progress-details, .progress-trust { margin: 0; color: var(--ink-soft); font-size: 14px; }
