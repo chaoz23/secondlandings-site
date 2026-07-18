@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Future Vision XPRIZE — Submission Checker (unofficial)</title>
+<meta name="description" content="A free, on-device sanity check for Future Vision XPRIZE film entries. Your video never leaves your computer." />
+<style>
+  :root{
+    --bg:#0b0d12; --panel:#141821; --ink:#e8ecf3; --muted:#93a0b4;
+    --line:#262e3c; --accent:#6ea8fe; --ok:#3ecf8e; --bad:#ff6b6b; --warn:#ffcf5c;
+  }
+  @media (prefers-color-scheme: light){
+    :root{ --bg:#f6f8fc; --panel:#fff; --ink:#141821; --muted:#5a6678; --line:#e3e8f0; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:720px;margin:0 auto;padding:32px 20px 64px}
+  .eyebrow{color:var(--accent);font-weight:600;letter-spacing:.02em;font-size:.85rem;text-transform:uppercase}
+  h1{font-size:1.7rem;margin:.2em 0 .3em;line-height:1.2}
+  .sub{color:var(--muted);margin:0 0 20px}
+  .badge{display:inline-block;font-size:.72rem;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:2px 10px;margin-right:6px}
+  .trust{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin:18px 0;font-size:.92rem}
+  .trust strong{color:var(--ok)}
+  .drop{margin:22px 0;border:2px dashed var(--line);border-radius:16px;background:var(--panel);
+    padding:40px 20px;text-align:center;cursor:pointer;transition:.15s}
+  .drop:hover,.drop.over{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 8%,var(--panel))}
+  .drop .big{font-size:1.1rem;font-weight:600}
+  .drop .small{color:var(--muted);font-size:.9rem;margin-top:6px}
+  #status{color:var(--muted);text-align:center;margin:10px 0}
+  .verdict{border-radius:14px;padding:16px 18px;margin:8px 0 18px;font-size:1.05rem}
+  .verdict.pass{background:color-mix(in srgb,var(--ok) 14%,var(--panel));border:1px solid var(--ok)}
+  .verdict.fail{background:color-mix(in srgb,var(--bad) 12%,var(--panel));border:1px solid var(--bad)}
+  h2{font-size:1.05rem;margin:26px 0 10px}
+  ul.checks{list-style:none;padding:0;margin:0}
+  ul.checks li{display:flex;gap:12px;background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:12px 14px;margin-bottom:8px}
+  ul.checks li.ok .mark{color:var(--ok)} ul.checks li.bad .mark{color:var(--bad)}
+  .mark{font-weight:800;font-size:1.15rem;line-height:1.4}
+  .cl-label{font-weight:600}
+  .cl-found{font-size:.9rem;margin-top:2px}
+  .cl-rule{font-size:.82rem;color:var(--muted);margin-top:3px}
+  ol.checklist{padding-left:22px;margin:0}
+  ol.checklist li{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:9px 12px;margin-bottom:7px}
+  .note{font-size:.85rem;color:var(--muted);background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:12px 14px;margin-top:16px}
+  footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);color:var(--muted);font-size:.82rem}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Second Landings · free tool</div>
+  <h1>Will your film pass the Future Vision XPRIZE tech check?</h1>
+  <p class="sub">Drop your submission in and get an instant, honest sanity check against the
+    competition's technical rules — <em>before</em> you submit.</p>
+  <div>
+    <span class="badge">Unofficial</span>
+    <span class="badge">Free</span>
+    <span class="badge">Open source</span>
+    <span class="badge">Runs on your device</span>
+  </div>
+
+  <div class="trust">
+    🔒 <strong>Your film never leaves your computer.</strong> This tool reads the file's technical
+    header locally, in your browser. Nothing is uploaded, stored, or logged — there is no server to
+    send it to. You can verify that: it's open source, and your browser's network tab will show zero
+    upload.
+  </div>
+
+  <div class="drop" id="drop">
+    <div class="big">Drop your MP4 or MOV here</div>
+    <div class="small">…or click to choose a file. It stays on your device.</div>
+    <input id="file" type="file" accept="video/mp4,video/quicktime,.mp4,.mov" hidden />
+  </div>
+
+  <div id="status" hidden></div>
+
+  <div id="results" hidden>
+    <div class="verdict" id="verdict"></div>
+    <h2>Technical rules we can read from your file</h2>
+    <ul class="checks" id="checks"></ul>
+    <h2>Before you submit — your checklist</h2>
+    <p class="sub" style="margin:-4px 0 10px;font-size:.9rem">These can't be read from the file. Confirm each yourself:</p>
+    <ol class="checklist" id="checklist"></ol>
+  </div>
+
+  <div class="note">
+    This tool checks <strong>only what the official rules state</strong>. The rules don't specify
+    aspect ratio, frame rate, codec, or file size, so it doesn't check those — it won't invent a
+    requirement. Always treat the
+    <a href="https://futurevisionxprize.com/rules" target="_blank" rel="noopener">official rules</a>
+    as the source of truth.
+  </div>
+
+  <footer>
+    An independent tool by <a href="https://secondlandings.com" target="_blank" rel="noopener">Second Landings</a>.
+    <strong>Not affiliated with or endorsed by</strong> XPRIZE, PHD Ventures, Google, or Range Media Partners.
+    “Future Vision XPRIZE” is their name, used here only to describe what this tool checks.
+    Built on the open-source <a href="https://github.com/buzz/mediainfo.js" target="_blank" rel="noopener">mediainfo.js</a>.
+  </footer>
+</div>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
