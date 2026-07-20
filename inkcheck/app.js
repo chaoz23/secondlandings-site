@@ -43,14 +43,42 @@ let progressPoll = null;
 let cancelRequested = false;
 let selectedEntries = [];
 const progressPresentation = window.InkcheckProgressPresentation.createProgressPresentation();
+const INTERNAL_USAGE_KEY = "inkcheck-internal-usage";
+const BROWSER_TOKEN_KEY = "inkcheck-browser-token";
 
 document.querySelector("#year").textContent = new Date().getFullYear();
 
+function configureInternalUsage() {
+  const url = new URL(window.location.href);
+  const internal = url.searchParams.get("internal");
+  if (internal === "1") localStorage.setItem(INTERNAL_USAGE_KEY, "1");
+  if (internal === "0") localStorage.removeItem(INTERNAL_USAGE_KEY);
+  if (internal === "1" || internal === "0") {
+    url.searchParams.delete("internal");
+    window.history.replaceState({}, "", url);
+  }
+}
+
+function browserToken() {
+  let token = localStorage.getItem(BROWSER_TOKEN_KEY);
+  if (token) return token;
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  token = btoa(String.fromCharCode(...bytes)).replaceAll("+", "-").replaceAll("/", "_").replaceAll("=", "");
+  localStorage.setItem(BROWSER_TOKEN_KEY, token);
+  return token;
+}
+
 function trackUsage(event) {
+  const payload = { event };
+  if (event === "page_view") {
+    payload.browserToken = browserToken();
+    payload.internal = localStorage.getItem(INTERNAL_USAGE_KEY) === "1";
+  }
   fetch(EVENT_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ event }),
+    body: JSON.stringify(payload),
     credentials: "omit",
     cache: "no-store",
     keepalive: true,
@@ -58,6 +86,7 @@ function trackUsage(event) {
   }).catch(() => {});
 }
 
+configureInternalUsage();
 trackUsage("page_view");
 document.querySelector(".support-button")?.addEventListener("click", () => {
   trackUsage("support_click");
