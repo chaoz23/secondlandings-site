@@ -42,6 +42,7 @@ let progressStream = null;
 let progressPoll = null;
 let cancelRequested = false;
 let selectedEntries = [];
+const progressPresentation = window.InkcheckProgressPresentation.createProgressPresentation();
 
 document.querySelector("#year").textContent = new Date().getFullYear();
 
@@ -536,35 +537,33 @@ function renderProgress(event, jobStatus) {
     progressDetails.textContent = "The page will keep reconnecting while this job remains available.";
     return;
   }
-  // Only phase_start/phase_end events carry a `phase`; the frequent `progress`
-  // events do not. Setting the heading from `phase` unconditionally would reset
-  // it to the default ("Preparing check") on every progress tick — and on a
-  // reconnect/poll the only snapshot is a phase-less progress event — so an
-  // active exploration would look stuck. `progress` events are emitted only
-  // during exploration, so treat one as the explore phase; otherwise keep the
-  // heading as the last real phase.
+  const measurement = progressPresentation.observe(event);
+  // Phase notices name the next activity, but must never erase the most recent
+  // measured work window. A poll/reconnect can also carry only that latest
+  // phase notice, so the presentation retains valid numeric progress until a
+  // newer measured update arrives.
   if (event?.phase) {
     progressPhase.textContent = phaseLabel(event.phase);
   } else if (event?.type === "progress") {
     progressPhase.textContent = phaseLabel("explore");
   }
-  const states = Number(event?.statesExplored) || 0;
-  const budget = Number(event?.stateBudget) || 0;
-  if (event?.phase === "explore" || event?.phase === "min_repro" || event?.type === "progress") {
+  const states = Number(measurement?.statesExplored) || 0;
+  const budget = Number(measurement?.stateBudget) || 0;
+  if (measurement) {
     const percent = budget ? Math.floor((states / budget) * 100) : 0;
     progressBudget.textContent = `${states.toLocaleString()} / ${budget.toLocaleString()} work states (${percent}% of state budget)`;
-    const details = [`${Number(event?.endingsFound || 0).toLocaleString()} endings`, `${Number(event?.runtimeErrorsFound || 0).toLocaleString()} runtime errors`];
-    if (event?.unvisitedKnots !== undefined) details.push(`${Number(event.unvisitedKnots).toLocaleString()} knots unvisited`);
-    if (event?.meaningfulYield !== undefined) details.push(`${Number(event.meaningfulYield).toLocaleString()} discoveries so far`);
-    details.push(`${elapsed(event?.elapsedMs)} elapsed`);
+    const details = [`${Number(measurement.endingsFound || 0).toLocaleString()} endings`, `${Number(measurement.runtimeErrorsFound || 0).toLocaleString()} runtime errors`];
+    if (measurement.unvisitedKnots !== undefined) details.push(`${Number(measurement.unvisitedKnots).toLocaleString()} knots unvisited`);
+    if (measurement.meaningfulYield !== undefined) details.push(`${Number(measurement.meaningfulYield).toLocaleString()} discoveries so far`);
+    details.push(`${elapsed(measurement.elapsedMs)} elapsed`);
     progressDetails.textContent = details.join(" · ");
-    if (event?.forecast) {
-      const pace = event.forecast.status === "active"
+    if (measurement.forecast) {
+      const pace = measurement.forecast.status === "active"
         ? "New discoveries are still arriving."
-        : event.forecast.status === "quiet"
+        : measurement.forecast.status === "quiet"
           ? "Discoveries have slowed in this window."
           : "Inkcheck is still learning this story's discovery pace.";
-      progressTrust.textContent = `${pace} Forecast uncertainty is ${event.forecast.uncertainty}; this is not a coverage estimate. Uploaded files are still deleted when the run ends.`;
+      progressTrust.textContent = `${pace} Forecast uncertainty is ${measurement.forecast.uncertainty}; this is not a coverage estimate. Uploaded files are still deleted when the run ends.`;
     }
   } else {
     progressBudget.textContent = "Working through the current phase.";
@@ -583,6 +582,7 @@ function clearJob() {
   stopJobUpdates();
   activeJob = null;
   cancelRequested = false;
+  progressPresentation.reset();
   sessionStorage.removeItem("inkcheck-active-job");
   runProgress.hidden = true;
 }
@@ -639,6 +639,7 @@ async function refreshJob() {
 function startJob(job) {
   activeJob = job;
   cancelRequested = false;
+  progressPresentation.reset();
   sessionStorage.setItem("inkcheck-active-job", JSON.stringify(job));
   renderProgress(null, job.status);
   setStatus(job.status === "queued" ? "Check queued." : "Starting check…");
