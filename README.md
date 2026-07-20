@@ -31,6 +31,14 @@ python3 -m http.server 8000
 
 Then open <http://localhost:8000>.
 
+The static landing page previews fully this way. The `/inkcheck/` page can be
+reviewed for layout, copy, file selection, and report rendering, but submitting a
+real hosted check depends on the production Inkcheck API declared in
+`inkcheck/index.html`. That API must allow the browser origin making the request;
+the production origin is `https://secondlandings.com`, so a plain localhost
+preview is not a complete end-to-end form test unless the API is temporarily
+configured to allow it or a local mock endpoint is used.
+
 ## Deploy
 
 Host: **Porkbun Static Hosting** with **GitHub Connect** — push to the linked
