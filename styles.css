@@ -4,11 +4,11 @@
   --surface: #faf8f3;
   --ink: #1c1a17;
   --ink-soft: #4a463f;
-  --muted: #8a8377;
+  --muted: #686258;
   --line: #d8d2c4;
   --line-soft: #e6e1d5;
-  --gold: #9a7b4f;       /* antique brass accent, used sparingly */
-  --gold-soft: #b79b71;
+  --gold: #806238;       /* antique brass accent, used sparingly */
+  --gold-soft: #806238;
   --maxw: 660px;
   --serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
   --sans: "Jost", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -20,7 +20,7 @@
     --surface: #1b1915;
     --ink: #efe9dc;
     --ink-soft: #c7bfae;
-    --muted: #8f887a;
+    --muted: #aba393;
     --line: #322e26;
     --line-soft: #2a2620;
     --gold: #c2a06a;
@@ -436,3 +436,62 @@ main { display: block; }
   border-bottom: 1px solid transparent; transition: border-color .3s ease;
 }
 .backpages-note a:hover, .foot a:hover, .prose a:hover { border-color: var(--gold); }
+
+
+/* Readability and keyboard access, preserving the ivory / espresso palette. */
+html { color-scheme: light dark; }
+body { font-weight: 400; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 5px;
+}
+.skip-link {
+  position: absolute; left: 1rem; top: .75rem; z-index: 100;
+  transform: translateY(-200%);
+  padding: .7rem 1rem; background: var(--ink); color: var(--bg);
+  font-size: 1rem;
+}
+.skip-link:focus { transform: translateY(0); }
+.section-label, .plant-group-label { font-size: .8125rem; line-height: 1.5; letter-spacing: .22em; font-weight: 400; }
+.eyebrow { font-size: .8125rem; letter-spacing: .24em; }
+.cta { font-size: .875rem; line-height: 1.5; letter-spacing: .16em; max-width: 100%; }
+.cta-note { max-width: 26rem; margin: 1rem auto 0; font-size: 1.0625rem; line-height: 1.55; }
+.link { gap: 1.25rem; text-align: left; }
+.link-label { min-width: 0; }
+.link-meta { font-size: .8125rem; letter-spacing: .1em; text-align: right; }
+.elsewhere { gap: .25rem 1.5rem; }
+.elsewhere a { display: inline-flex; align-items: center; min-height: 44px; font-size: .875rem; letter-spacing: .12em; }
+.foot { padding-bottom: 3rem; }
+.foot .section-label { margin-bottom: .75rem; }
+.foot .footer-label { margin-top: 2rem; }
+.colophon { font-size: .75rem !important; line-height: 1.8; letter-spacing: .1em; }
+.monogram { text-decoration: none; }
+.hero-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .75rem 1.75rem; }
+.quiet-link { display: inline-flex; align-items: center; min-height: 44px; color: var(--gold); font-size: .9375rem; text-underline-offset: .3em; }
+.project-intro { margin-bottom: 2rem; }
+.plate figcaption, .gallery figcaption { font-size: .75rem; letter-spacing: .16em; }
+.plant-note { font-size: .875rem; }
+.credit-role { font-size: .8125rem; letter-spacing: .12em; }
+@media (max-width: 600px) {
+  .hero { padding-top: 3.5rem; }
+  .section { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .section + .section { margin-top: 4rem; }
+  .link { flex-direction: column; align-items: flex-start; gap: .35rem; padding-top: 1.1rem; padding-bottom: 1.1rem; }
+  .link-meta { text-align: left; }
+  .credit-row { flex-direction: column; align-items: flex-start; gap: .3rem; }
+  .credit-name { text-align: left; }
+  .hero .lead br { display: none; }
+  .links { margin-bottom: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}
+
+/* A clearer first screen and a distinct first reading destination. */
+.hero-intro { max-width: 30rem; margin: 1.4rem auto 0; font-size: 1.0625rem; color: var(--ink-soft); line-height: 1.6; }
+.hero { padding-top: 72px; }
+.hero .monogram { width: 60px; height: 60px; margin-bottom: 22px; }
+.hero h1.essay-title { font-size: clamp(32px, 7vw, 48px); line-height: 1.12; text-wrap: balance; }
+.reading-title { margin: 0 0 1rem; font-family: var(--serif); font-size: 1.8rem; font-weight: 500; line-height: 1.2; }
+.reading-title a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: .2em; }
+@media (max-width: 600px) { .hero { padding-top: 2.5rem; } }
