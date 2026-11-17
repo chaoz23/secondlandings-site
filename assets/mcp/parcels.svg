@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="King County Address to Parcel">
+  <rect width="128" height="128" rx="24" fill="#1e1a17"/>
+  <circle cx="64" cy="64" r="44" fill="none" stroke="#c2a06a" stroke-width="2"/>
+  <path d="M38 46 L62 40 L90 48 L84 84 L58 90 L34 80 Z" fill="none" stroke="#c2a06a" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M62 40 L58 90" fill="none" stroke="#c2a06a" stroke-width="2" stroke-dasharray="4 4"/>
+  <circle cx="72" cy="64" r="4.5" fill="#c2a06a"/>
+</svg>

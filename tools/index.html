@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tools · Second Landings</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <meta name="description" content="Small, open instruments made along the way — free, read-only, built for people and their agents. King County permit history, address to parcel, and a second pair of eyes for interactive fiction." />
+  <meta property="og:title" content="Tools · Second Landings" />
+  <meta property="og:description" content="Small, open instruments made along the way — free, read-only, built for people and their agents." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles.css?v=8" />
+</head>
+<body>
+  <main>
+
+    <header class="hero section">
+      <a class="monogram" href="/" aria-label="Second Landings home">SL</a>
+      <p class="eyebrow">Second Landings</p>
+      <h1>Tools</h1>
+      <div class="rule" aria-hidden="true"></div>
+      <p class="lead">Small instruments made along the way —<br />free, open, and built for people and their agents.</p>
+    </header>
+
+    <section class="section narrow">
+      <p class="section-label">The Premise</p>
+      <div class="prose">
+        <p>Some questions should not take an afternoon. <em>What has been permitted at
+        this address? Which parcel is it, and whose jurisdiction? Does this story still
+        hold together?</em> Each of these is a small, answerable thing — so I built a
+        small, answerable tool for it, and left the door open.</p>
+        <p>They are read-only, ask for no account, and speak the same language an AI
+        assistant does, so you can use them yourself or hand them to the agent you
+        already work with. The code is public under the MIT licence; the data comes
+        from the public record and says where it came from.</p>
+      </div>
+    </section>
+
+    <section class="section narrow">
+      <p class="section-label">King County, Washington</p>
+      <nav class="links">
+        <a class="link" href="https://permits-api.secondlandings.ai/vendor-map">
+          <span class="link-label">King County Permit Status</span>
+          <span class="link-meta">What is on file at an address, and its status · 39 cities</span>
+        </a>
+        <a class="link" href="https://github.com/chaoz23/king-county-permit-status#readme">
+          <span class="link-label">— the code and the scorecard</span>
+          <span class="link-meta">GitHub · MIT</span>
+        </a>
+        <a class="link" href="https://permits-api.secondlandings.ai/llms.txt">
+          <span class="link-label">— for agents</span>
+          <span class="link-meta">MCP · REST · OpenAPI</span>
+        </a>
+        <a class="link" href="https://github.com/chaoz23/king-county-address-to-parcel-number#readme">
+          <span class="link-label">Address to Parcel</span>
+          <span class="link-meta">The parcel number, and whose jurisdiction it truly is</span>
+        </a>
+      </nav>
+    </section>
+
+    <section class="section narrow">
+      <p class="section-label">Interactive Fiction</p>
+      <nav class="links">
+        <a class="link" href="/inkcheck/">
+          <span class="link-label">Inkcheck</span>
+          <span class="link-meta">A second pair of eyes for stories written with ink</span>
+        </a>
+      </nav>
+    </section>
+
+    <section class="section narrow">
+      <p class="section-label">A Note</p>
+      <div class="prose">
+        <p>The permit tool reaches the county's and twenty cities' own systems as you
+        ask; where a city offers no public search, it falls back to the Assessor's
+        record and tells you so. Nothing here is legal advice, and a permit's status
+        is always the issuing jurisdiction's to confirm.</p>
+      </div>
+    </section>
+
+    <footer class="foot section">
+      <div class="rule" aria-hidden="true"></div>
+      <p><a href="/">← Second Landings</a> &nbsp;·&nbsp; Tools &nbsp;·&nbsp; © <span id="year"></span></p>
+    </footer>
+
+  </main>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

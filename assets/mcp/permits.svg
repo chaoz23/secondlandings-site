@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="King County Permit Status">
+  <rect width="128" height="128" rx="24" fill="#1e1a17"/>
+  <circle cx="64" cy="64" r="44" fill="none" stroke="#c2a06a" stroke-width="2"/>
+  <path d="M40 72 L64 50 L88 72" fill="none" stroke="#c2a06a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M48 70 V86 H80 V70" fill="none" stroke="#c2a06a" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M56 86 V76 H72 V86" fill="none" stroke="#c2a06a" stroke-width="2.5"/>
+  <path d="M74 44 l6 6 l10 -12" fill="none" stroke="#c2a06a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
